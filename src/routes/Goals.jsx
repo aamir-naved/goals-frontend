@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
 
 axios.defaults.withCredentials = true;
 
@@ -44,7 +45,7 @@ const Goals = () => {
     const fetchGoals = async () => {
         console.log("Fetching goals for User ID:", user?.id);
         try {
-            const response = await axios.get(`http://localhost:8080/auth/goals/${user.id}`, {
+            const response = await axios.get(`${API_BASE_URL}/auth/goals/${user.id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -77,7 +78,7 @@ const Goals = () => {
         const newGoal = { ...goalForm, userId: user.id };
 
         try {
-            const response = await axios.post("http://localhost:8080/auth/goals", newGoal, {
+            const response = await axios.post(`${API_BASE_URL}/auth/goals`, newGoal, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -100,7 +101,7 @@ const Goals = () => {
     const handleDelete = async (goalId) => {
         console.log("Deleting goal with ID:", goalId);
         try {
-            await axios.delete(`http://localhost:8080/auth/goals/${goalId}`, {
+            await axios.delete(`${API_BASE_URL}/auth/goals/${goalId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -132,7 +133,7 @@ const Goals = () => {
             const updatedGoal = { ...goalForm, userId: user.id };
 
             const response = await axios.put(
-                `http://localhost:8080/auth/goals/${editingGoal.id}`,
+                `${API_BASE_URL}/auth/goals/${editingGoal.id}`,
                 updatedGoal,
                 { headers: { Authorization: `Bearer ${token}` } }
             );

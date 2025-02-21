@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -24,7 +26,7 @@ const Dashboard = () => {
     const fetchUsers = async () => {
         try {
             const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
-            const response = await axios.get("http://localhost:8080/api/accountability/users", {
+            const response = await axios.get(`${API_BASE_URL}/api/accountability/users`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -51,7 +53,7 @@ const Dashboard = () => {
         
         try {
             const response = await axios.get(
-                `http://localhost:8080/api/accountability/partner?userId=${user?.id}`,
+                `${API_BASE_URL}/api/accountability/partner?userId=${user?.id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -89,7 +91,7 @@ const Dashboard = () => {
         try {
             const token = localStorage.getItem("token");
             const response = await axios.get(
-                `http://localhost:8080/api/accountability/pending-requests?userId=${user?.id}`,
+                `${API_BASE_URL}/api/accountability/pending-requests?userId=${user?.id}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setPendingRequests(response.data || []);
@@ -104,7 +106,7 @@ const Dashboard = () => {
         const user = storedUser ? JSON.parse(storedUser) : null;
         try {
             const response = await axios.post(
-                `http://localhost:8080/api/accountability/send-request?senderId=${user?.id}&receiverId=${receiverId}`,
+                `${API_BASE_URL}/api/accountability/send-request?senderId=${user?.id}&receiverId=${receiverId}`,
                 {},  // Empty body since parameters are passed in the URL
                 {
                     headers: {
@@ -126,7 +128,7 @@ const Dashboard = () => {
         const token = localStorage.getItem("token");
         try {
             const response = await axios.post(
-                `http://localhost:8080/api/accountability/respond-request?receiverId=${user?.id}&senderId=${senderId}&accept=${accept}`,
+                `${API_BASE_URL}/api/accountability/respond-request?receiverId=${user?.id}&senderId=${senderId}&accept=${accept}`,
                 {},  // Empty body since parameters are passed in the URL
                 {
                     headers: {
@@ -149,7 +151,7 @@ const Dashboard = () => {
         const token = localStorage.getItem("token");
         try {
             const response = await axios.delete(
-                `http://localhost:8080/api/accountability/remove-partner?userId=${user?.id}`,
+                `${API_BASE_URL}/api/accountability/remove-partner?userId=${user?.id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`

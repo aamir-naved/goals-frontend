@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
 
 const Register = () => {
     const [email, setEmail] = useState("");
@@ -39,13 +39,13 @@ const Register = () => {
         e.preventDefault();
         try {
             // Register the user
-            const registerResponse = await axios.post("http://localhost:8080/auth/register", {
+            const registerResponse = await axios.post(`${API_BASE_URL}/auth/register`, {
                 email, name, password
             });
             console.log(registerResponse.data);
 
             // If registration is successful, log in immediately
-            const loginResponse = await axios.post("http://localhost:8080/auth/login", {
+            const loginResponse = await axios.post(`${API_BASE_URL}/auth/login`, {
                 email, password
             });
 

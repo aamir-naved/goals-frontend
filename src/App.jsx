@@ -5,6 +5,8 @@ import Register from "./routes/Register";
 import Dashboard from "./routes/Dashboard";
 import Goals from "./routes/Goals";
 import ProtectedRoute from "./components/ProtectedRoute";
+import "./axiosConfig.js";
+
 
 function App() {
   return (

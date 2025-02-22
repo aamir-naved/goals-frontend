@@ -170,7 +170,7 @@ const Dashboard = () => {
             );
 
             alert(response.data); // Backend returns a message string
-            setPartners(null);
+            setPartners([]);
             setPartnerId(null); 
             console.log("Partner Removed Successfully.")
             fetchUsers();

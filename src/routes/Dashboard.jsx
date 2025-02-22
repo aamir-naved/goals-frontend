@@ -138,7 +138,7 @@ const Dashboard = () => {
         const token = localStorage.getItem("token");
         try {
             const response = await axios.post(
-                `${API_BASE_URL}/api/accountability/respond-request?receiverId=${user?.id}&senderId=${senderId}&accept=${accept}`,
+                `${API_BASE_URL}/api/accountability/respond-request?receiverId=${senderId}&senderId=${user?.id}&accept=${accept}`,
                 {},  // Empty body since parameters are passed in the URL
                 {
                     headers: {

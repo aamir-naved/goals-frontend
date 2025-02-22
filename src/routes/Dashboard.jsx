@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+import "./Dashboard.css"
 
 
 const Dashboard = () => {
@@ -176,42 +177,110 @@ const Dashboard = () => {
         navigate("/login");
     };
 
-    return (
-        <div className="container mx-auto p-4">
-            <h2 className="text-2xl font-bold mb-4">Dashboard , Hello {user?.name}, ID - {user?.id}</h2>
+    // return (
+    //     <div className="container mx-auto p-4">
+    //         <h2 className="text-2xl font-bold mb-4">Dashboard , Hello {user?.name}, ID - {user?.id}</h2>
 
-            <div className="mb-4">
+    //         <div className="mb-4">
+    //             <Link to="/goals">
+    //                 <button className="bg-blue-500 text-white px-4 py-2 mr-2">View Goals</button>
+    //             </Link>
+    //             <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2">
+    //                 Logout
+    //             </button>
+    //         </div>
+
+    //         {partner ? (
+    //             <div className="p-4 bg-green-200 rounded mb-4">
+    //                 <p><strong>Current Accountability Partner:</strong> {partner.name}</p>
+    //                 <button onClick={removePartner} className="bg-red-500 text-white px-4 py-2 mt-2">Remove Partner</button>
+    //             </div>
+    //         ) : (
+    //             <p className="mb-4">You don't have an accountability partner yet.</p>
+    //         )}
+
+
+    //         {/* ✅ Pending Requests Section */}
+    //         {pendingRequests.length > 0 && (
+    //             <div className="p-4 bg-yellow-100 rounded mb-4">
+    //                 <h2 className="text-xl font-semibold mb-2">Pending Requests</h2>
+    //                 <ul>
+    //                     {pendingRequests.map((request) => (
+    //                         <li key={request.id} className="flex justify-between items-center p-2 border-b">
+    //                             <span>{request.user.name} wants to be your accountability partner</span>
+    //                             <div>
+    //                                 <button onClick={() => respondToRequest(request.user.id, true)} className="bg-green-500 text-white px-3 py-1 rounded-md mr-2">
+    //                                     Accept
+    //                                 </button>
+    //                                 <button onClick={() => respondToRequest(request.user.id, false)} className="bg-red-500 text-white px-3 py-1 rounded-md">
+    //                                     Reject
+    //                                 </button>
+    //                             </div>
+    //                         </li>
+    //                     ))}
+    //                 </ul>
+    //             </div>
+    //         )}
+            
+
+    //         <h2 className="text-xl font-semibold mb-2">Available Users</h2>
+    //         {users.length === 0 ? (
+    //             <p>No users available.</p>
+    //         ) : (
+    //             <ul className="space-y-2">
+    //                 {users.map((user) => (
+    //                     <li key={user.id} className="p-3 bg-gray-100 rounded flex justify-between items-center">
+    //                         <span>Name: {user.name}</span>
+    //                         <span>, User Id {user.id}</span>
+    //                         <span></span>
+
+    //                         {user.id === partnerId ? (
+    //                             <button onClick={removePartner} className="bg-red-500 text-white px-4 py-2">
+    //                                 Remove Partner
+    //                             </button>
+    //                         ) : (
+    //                             <button onClick={() => sendRequest(user.id)} className="bg-blue-500 text-white px-3 py-1">Send Request</button>
+    //                         )}
+    //                     </li>
+    //                 ))}
+    //             </ul>
+    //         )}
+
+    //     </div>
+    // );
+
+    return (
+        <div className="container">
+            <h2>Dashboard , Hello {user?.name}, ID - {user?.id}</h2>
+
+            <div className="button-group">
                 <Link to="/goals">
-                    <button className="bg-blue-500 text-white px-4 py-2 mr-2">View Goals</button>
+                    <button className="view-goals">View Goals</button>
                 </Link>
-                <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2">
-                    Logout
-                </button>
+                <button onClick={handleLogout} className="logout">Logout</button>
             </div>
 
             {partner ? (
-                <div className="p-4 bg-green-200 rounded mb-4">
+                <div className="partner-section">
                     <p><strong>Current Accountability Partner:</strong> {partner.name}</p>
-                    <button onClick={removePartner} className="bg-red-500 text-white px-4 py-2 mt-2">Remove Partner</button>
+                    <button onClick={removePartner} className="remove-partner">Remove Partner</button>
                 </div>
             ) : (
-                <p className="mb-4">You don't have an accountability partner yet.</p>
+                <p className="no-partner">You don't have an accountability partner yet.</p>
             )}
 
-
-            {/* ✅ Pending Requests Section */}
             {pendingRequests.length > 0 && (
-                <div className="p-4 bg-yellow-100 rounded mb-4">
-                    <h2 className="text-xl font-semibold mb-2">Pending Requests</h2>
+                <div className="pending-requests">
+                    <h2>Pending Requests</h2>
                     <ul>
                         {pendingRequests.map((request) => (
-                            <li key={request.id} className="flex justify-between items-center p-2 border-b">
+                            <li key={request.id} className="request-item">
                                 <span>{request.user.name} wants to be your accountability partner</span>
                                 <div>
-                                    <button onClick={() => respondToRequest(request.user.id, true)} className="bg-green-500 text-white px-3 py-1 rounded-md mr-2">
+                                    <button onClick={() => respondToRequest(request.user.id, true)} className="accept">
                                         Accept
                                     </button>
-                                    <button onClick={() => respondToRequest(request.user.id, false)} className="bg-red-500 text-white px-3 py-1 rounded-md">
+                                    <button onClick={() => respondToRequest(request.user.id, false)} className="reject">
                                         Reject
                                     </button>
                                 </div>
@@ -220,33 +289,31 @@ const Dashboard = () => {
                     </ul>
                 </div>
             )}
-            
 
-            <h2 className="text-xl font-semibold mb-2">Available Users</h2>
+            <h2>Available Users</h2>
             {users.length === 0 ? (
                 <p>No users available.</p>
             ) : (
-                <ul className="space-y-2">
+                <ul className="users-list">
                     {users.map((user) => (
-                        <li key={user.id} className="p-3 bg-gray-100 rounded flex justify-between items-center">
+                        <li key={user.id} className="user-item">
                             <span>Name: {user.name}</span>
                             <span>, User Id {user.id}</span>
-                            <span></span>
 
                             {user.id === partnerId ? (
-                                <button onClick={removePartner} className="bg-red-500 text-white px-4 py-2">
+                                <button onClick={removePartner} className="remove-partner">
                                     Remove Partner
                                 </button>
                             ) : (
-                                <button onClick={() => sendRequest(user.id)} className="bg-blue-500 text-white px-3 py-1">Send Request</button>
+                                <button onClick={() => sendRequest(user.id)} className="send-request">Send Request</button>
                             )}
                         </li>
                     ))}
                 </ul>
             )}
-
         </div>
     );
+
 };
 
 export default Dashboard;

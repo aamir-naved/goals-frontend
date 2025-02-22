@@ -50,7 +50,7 @@ const Register = () => {
                 email, password
             });
 
-            const { token, user } = response.data; // Get both token and user
+            const { token, user } = loginResponse.data; // Get both token and user
             localStorage.setItem("token", token);
             localStorage.setItem("user", JSON.stringify(user)); // Store user object
 

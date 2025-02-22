@@ -119,6 +119,7 @@ const Register = () => {
                     required
                 />
                 <button type="submit">Register</button>
+                <button onClick={() => navigate("/login")}>Login</button>
             </form>
         </div>
     );

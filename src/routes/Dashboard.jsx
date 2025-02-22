@@ -11,6 +11,8 @@ const Dashboard = () => {
     const [partner, setPartner] = useState(null);
     const [partnerId, setPartnerId] = useState(null);
     const [pendingRequests, setPendingRequests] = useState([]);
+    const [partnerGoals, setPartnerGoals] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
     
@@ -98,6 +100,20 @@ const Dashboard = () => {
             setPendingRequests(response.data || []);
         } catch (error) {
             console.error("Error fetching pending requests:", error);
+        }
+    };
+
+    const fetchPartnerGoals = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await axios.get(
+                `${API_BASE_URL}/api/accountability/partnerGoals?userId=${user?.id}`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            setPartnerGoals(response.data || []);
+            setIsModalOpen(true);
+        } catch (error) {
+            console.error("Error fetching partner's goals:", error);
         }
     };
 
@@ -264,11 +280,31 @@ const Dashboard = () => {
                 <div className="partner-section">
                     <p><strong>Current Accountability Partner:</strong> {partner.name}</p>
                     <button onClick={removePartner} className="remove-partner">Remove Partner</button>
+                    <button onClick={fetchPartnerGoals} className="show-goals">Partner Goals</button>
                 </div>
             ) : (
                 <p className="no-partner">You don't have an accountability partner yet.</p>
             )}
 
+            {isModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2>Partner's Goals</h2>
+                        <button className="close-modal" onClick={() => setIsModalOpen(false)}>Close</button>
+                        <div className="goal-list">
+                            {partnerGoals.length > 0 ? (
+                                <ul>
+                                    {partnerGoals.map((goal) => (
+                                        <li key={goal.id}>{goal.title} - {goal.description}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No goals found.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
             {pendingRequests.length > 0 && (
                 <div className="pending-requests">
                     <h2>Pending Requests</h2>

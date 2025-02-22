@@ -317,12 +317,12 @@ const Dashboard = () => {
 
                             return (
                                 <li key={request.id} className="request-item">
-                                    <span>{request.partnerName || "Unknown"} wants to be your accountability partner</span>
+                                    <span>{request.partnerName || "Unknown"}, ID - {request.partnerId } wants to be your accountability partner!</span>
                                     <div>
-                                        <button onClick={() => respondToRequest(request.partnerId, true)} className="accept">
+                                        <button onClick={() => respondToRequest(request.userId, true)} className="accept">
                                             Accept
                                         </button>
-                                        <button onClick={() => respondToRequest(request.partnerId, false)} className="reject">
+                                        <button onClick={() => respondToRequest(request.userId, false)} className="reject">
                                             Reject
                                         </button>
                                     </div>

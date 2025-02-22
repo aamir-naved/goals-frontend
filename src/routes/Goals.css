@@ -1,51 +1,67 @@
-.container {
-    max-width: 800px;
+.goals-container {
+    max-width: 900px;
     margin: auto;
     padding: 20px;
-    font-family: Arial, sans-serif;
 }
 
-h2,
-h3 {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 16px;
-}
-
-button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin: 5px;
-}
-
-.bg-blue-500 {
-    background-color: #007bff;
-    color: white;
-}
-
-.bg-blue-500:hover {
-    background-color: #0056b3;
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .add-goal-btn {
-    background-color: #28a745;
+    display: block;
+    margin: 10px auto;
+    background-color: #4CAF50;
     color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 .add-goal-btn:hover {
-    background-color: #218838;
+    background-color: #45a049;
 }
 
-.cancel-btn {
-    background-color: #6c757d;
+.goal-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.goal-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    overflow: hidden;
+}
+
+.goal-card h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.goal-card p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.goal-card button {
+    margin: 5px;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.edit-btn {
+    background-color: #007bff;
     color: white;
-}
-
-.cancel-btn:hover {
-    background-color: #5a6268;
 }
 
 .delete-btn {
@@ -53,63 +69,51 @@ button {
     color: white;
 }
 
+.edit-btn:hover {
+    background-color: #0056b3;
+}
+
 .delete-btn:hover {
     background-color: #c82333;
 }
 
-.edit-btn {
-    background-color: #ffc107;
-    color: black;
-}
-
-.edit-btn:hover {
-    background-color: #e0a800;
-}
-
-.form-container {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 5px;
+.goal-form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
     margin-bottom: 20px;
 }
 
-input,
-textarea {
+.goal-form input,
+.goal-form textarea {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     margin: 5px 0;
     border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-label {
-    display: flex;
-    align-items: center;
-    margin-top: 5px;
-}
-
-input[type="checkbox"] {
-    margin-left: 5px;
-}
-
-.goal-list {
-    list-style: none;
-    padding: 0;
-}
-
-.goal-item {
-    background-color: #e9ecef;
-    padding: 10px;
     border-radius: 5px;
-    margin-bottom: 10px;
 }
 
-.goal-item h3 {
-    margin: 0;
-    font-size: 18px;
+.goal-form button {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
 }
 
-.goal-item p {
-    margin: 5px 0;
-    font-size: 14px;
+.save-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.cancel-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.save-btn:hover {
+    background-color: #218838;
+}
+
+.cancel-btn:hover {
+    background-color: #5a6268;
 }

@@ -283,11 +283,11 @@ const Goals = () => {
     // );
      
     return (
-        <div className="container">
+        <div className="goals-container">
             {/* Back to Dashboard Button */}
             <button
                 onClick={() => navigate("/dashboard")}
-                className="bg-blue-500"
+                className="add-goal-btn"
             >
                 Back to Dashboard
             </button>
@@ -304,7 +304,7 @@ const Goals = () => {
 
             {/* Add New Goal Form */}
             {showAddForm && (
-                <div className="form-container">
+                <div className="goal-form">
                     <h3>Add New Goal</h3>
                     <form onSubmit={handleSubmit}>
                         <input
@@ -345,7 +345,7 @@ const Goals = () => {
                                 onChange={handleInputChange}
                             />
                         </label>
-                        <button type="submit" className="add-goal-btn">Save Goal</button>
+                        <button type="submit" className="save-btn">Save Goal</button>
                         <button onClick={() => setShowAddForm(false)} className="cancel-btn">Cancel</button>
                     </form>
                 </div>
@@ -353,7 +353,7 @@ const Goals = () => {
 
             {/* Edit Goal Form */}
             {editingGoal && (
-                <div className="form-container">
+                <div className="goal-form">
                     <h3>Edit Goal</h3>
                     <form onSubmit={handleUpdate}>
                         <input
@@ -394,7 +394,7 @@ const Goals = () => {
                                 onChange={handleInputChange}
                             />
                         </label>
-                        <button type="submit" className="edit-btn">Update Goal</button>
+                        <button type="submit" className="save-btn">Update Goal</button>
                         <button onClick={() => setEditingGoal(null)} className="cancel-btn">Cancel</button>
                     </form>
                 </div>
@@ -403,7 +403,7 @@ const Goals = () => {
             {/* Goals List */}
             <ul className="goal-list">
                 {goals.map((goal) => (
-                    <li key={goal.id} className="goal-item">
+                    <li key={goal.id} className="goal-card">
                         <h3>{goal.title}</h3>
                         <p>{goal.description}</p>
                         <p>Deadline: {goal.deadline}</p>

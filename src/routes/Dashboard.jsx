@@ -87,6 +87,8 @@ const Dashboard = () => {
                 `${API_BASE_URL}/api/accountability/pending-requests?userId=${user?.id}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
+            console.log("We fetch pending request response:")
+            console.log(response.data)
             setPendingRequests(response.data || []);
         } catch (error) {
             console.error("Error fetching pending requests:", error);
@@ -309,23 +311,34 @@ const Dashboard = () => {
                 <div className="pending-requests">
                     <h2>Pending Requests</h2>
                     <ul>
-                        {pendingRequests.map((request) => (
-                            <li key={request.id} className="request-item">
-                                <span>{request.user.name} wants to be your accountability partner</span>
-                                <div>
-                                    <button onClick={() => respondToRequest(request.user.id, true)} className="accept">
-                                        Accept
-                                    </button>
-                                    <button onClick={() => respondToRequest(request.user.id, false)} className="reject">
-                                        Reject
-                                    </button>
-                                </div>
-                            </li>
-                        ))}
+                        {pendingRequests.map((request) => {
+                            console.log("Pending Request:", request); // Debugging
+
+                            if (!request.user) {
+                                return (
+                                    <li key={request.id || Math.random()} className="request-item">
+                                        <span>Invalid request data</span>
+                                    </li>
+                                );
+                            }
+
+                            return (
+                                <li key={request.id} className="request-item">
+                                    <span>{request.user?.name || "Unknown"} wants to be your accountability partner</span>
+                                    <div>
+                                        <button onClick={() => respondToRequest(request.user?.id, true)} className="accept">
+                                            Accept
+                                        </button>
+                                        <button onClick={() => respondToRequest(request.user?.id, false)} className="reject">
+                                            Reject
+                                        </button>
+                                    </div>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </div>
             )}
-
             <h2>Available Users</h2>
             {users.length === 0 ? (
                 <p>No users available.</p>

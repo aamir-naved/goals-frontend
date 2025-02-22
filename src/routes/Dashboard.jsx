@@ -64,7 +64,8 @@ const Dashboard = () => {
                 }
             );
 
-            console.log("Request made: ")
+            console.log("Request made to fetch partner: Response:-")
+            console.log(response)
 
             if (response.data && Array.isArray(response.data) && response.data.length > 0) {
                 console.log("Received partners:", response.data);

@@ -50,14 +50,11 @@ const Register = () => {
                 email, password
             });
 
-            const token = loginResponse.data;  // Assuming your backend returns a JWT token
-            console.log("Login Successful, Token:", token);
-
-            // Store the token in localStorage
+            const { token, user } = response.data; // Get both token and user
             localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user)); // Store user object
 
-            // Redirect to Dashboard
-            navigate("/dashboard");
+            navigate("/dashboard"); // Redirect to dashboard
 
         } catch (error) {
             console.error("Error during registration or login:", error);

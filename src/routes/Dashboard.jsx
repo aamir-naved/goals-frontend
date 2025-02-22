@@ -314,22 +314,14 @@ const Dashboard = () => {
                         {pendingRequests.map((request) => {
                             console.log("Pending Request:", request); // Debugging
 
-                            if (!request.user) {
-                                return (
-                                    <li key={request.id || Math.random()} className="request-item">
-                                        <span>Invalid request data</span>
-                                    </li>
-                                );
-                            }
-
                             return (
                                 <li key={request.id} className="request-item">
-                                    <span>{request.user?.name || "Unknown"} wants to be your accountability partner</span>
+                                    <span>{request.userName || "Unknown"} wants to be your accountability partner</span>
                                     <div>
-                                        <button onClick={() => respondToRequest(request.user?.id, true)} className="accept">
+                                        <button onClick={() => respondToRequest(request.userId, true)} className="accept">
                                             Accept
                                         </button>
-                                        <button onClick={() => respondToRequest(request.user?.id, false)} className="reject">
+                                        <button onClick={() => respondToRequest(request.userId, false)} className="reject">
                                             Reject
                                         </button>
                                     </div>

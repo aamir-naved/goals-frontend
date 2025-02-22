@@ -56,7 +56,7 @@ const Dashboard = () => {
         
         try {
             const response = await axios.get(
-                `${API_BASE_URL}/api/accountability/partner?userId=${user?.id}`,
+                `${API_BASE_URL}/api/accountability/partners?userId=${user?.id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`

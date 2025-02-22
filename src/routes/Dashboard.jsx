@@ -8,7 +8,7 @@ import "./Dashboard.css"
 const Dashboard = () => {
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);  // Initialize as an empty array
-    const [partner, setPartner] = useState(null);
+    const [partners, setPartners] = useState([]);
     const [partnerId, setPartnerId] = useState(null);
     const [pendingRequests, setPendingRequests] = useState([]);
     const [partnerGoals, setPartnerGoals] = useState([]);
@@ -66,22 +66,12 @@ const Dashboard = () => {
 
             console.log("Request made: ")
 
-            if (response.data && response.data !== "No active accountability partner found.") {
-                const accountabilityPartner = response.data;
-
-                // Determine the actual partner (not the logged-in user)
-                const actualPartner =
-                    accountabilityPartner.user.id === user.id
-                        ? accountabilityPartner.partner
-                        : accountabilityPartner.user;
-
-                console.log("Extracted partner:", actualPartner);
-                setPartner(actualPartner);
-                setPartnerId(actualPartner.id);
+            if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+                console.log("Received partners:", response.data);
+                setPartners(response.data);  // Now storing multiple partners
             } else {
-                console.log("Else block of response");
-                setPartner(null);
-                setPartnerId(null);
+                console.log("No accountability partners found.");
+                setPartners([]);
             }
         } catch (error) {
             console.error("Error fetching accountability partner:", error);
@@ -103,11 +93,11 @@ const Dashboard = () => {
         }
     };
 
-    const fetchPartnerGoals = async () => {
+    const fetchPartnerGoals = async (partnerId) => {
         try {
             const token = localStorage.getItem("token");
             const response = await axios.get(
-                `${API_BASE_URL}/api/accountability/partnerGoals?userId=${user?.id}`,
+                `${API_BASE_URL}/api/accountability/partnerGoals?partnerId=${partnerId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setPartnerGoals(response.data || []);
@@ -162,13 +152,13 @@ const Dashboard = () => {
         }
     };
 
-    const removePartner = async () => {
+    const removePartner = async (partnerId) => {
         const storedUser = localStorage.getItem("user");
         const user = storedUser ? JSON.parse(storedUser) : null;
         const token = localStorage.getItem("token");
         try {
             const response = await axios.delete(
-                `${API_BASE_URL}/api/accountability/remove-partner?userId=${user?.id}`,
+                `${API_BASE_URL}/api/accountability/remove-partner?userId=${user?.id}&partnerId=${partnerId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -177,7 +167,7 @@ const Dashboard = () => {
             );
 
             alert(response.data); // Backend returns a message string
-            setPartner(null);
+            setPartners(null);
             setPartnerId(null); 
             console.log("Partner Removed Successfully.")
             fetchUsers();
@@ -276,11 +266,21 @@ const Dashboard = () => {
                 <button onClick={handleLogout} className="logout">Logout</button>
             </div>
 
-            {partner ? (
+            {partners.length > 0 ? (
                 <div className="partner-section">
-                    <p><strong>Current Accountability Partner:</strong> {partner.name}</p>
-                    <button onClick={removePartner} className="remove-partner">Remove Partner</button>
-                    <button onClick={fetchPartnerGoals} className="show-goals">Partner Goals</button>
+                    <h3>Current Accountability Partners:</h3>
+                    {partners.map((partner) => (
+                        <div key={partner.id} className="partner-card">
+                            <p><strong>Name:</strong> {partner.name}</p>
+                            <p><strong>Email:</strong> {partner.email}</p>
+                            <button onClick={() => removePartner(partner.id)} className="remove-partner">
+                                Remove Partner
+                            </button>
+                            <button onClick={() => fetchPartnerGoals(partner.id)} className="show-goals">
+                                View Goals
+                            </button>
+                        </div>
+                    ))}
                 </div>
             ) : (
                 <p className="no-partner">You don't have an accountability partner yet.</p>

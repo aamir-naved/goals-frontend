@@ -226,7 +226,7 @@ const Dashboard = () => {
                     <button onClick={handleInstallClick} className="install-btn">Install</button>
                 </div>
             )}
-            <h2>Hello There! {user?.name} 🙋</h2>
+            <h1>Hello There! {user?.name} 🙋</h1>
 
             <div className="button-group">
                 <Link to="/goals">

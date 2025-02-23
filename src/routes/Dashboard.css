@@ -12,6 +12,13 @@ h2 {
     color: #222;
 }
 
+h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #0f0101;
+}
+
 .button-group {
     display: flex;
     gap: 10px;
@@ -38,7 +45,7 @@ h2 {
 }
 
 .partner-section {
-    background-color: #d4edda;
+    background-color: rgb(231, 228, 228);
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 20px;

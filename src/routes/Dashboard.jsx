@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Loader from "./Loader";
 import axios from "axios";
 const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
 import "./Dashboard.css"
@@ -57,6 +58,7 @@ const Dashboard = () => {
 
     const fetchUsers = async () => {
         try {
+            setLoading(true);
             const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
             const response = await axios.get(`${API_BASE_URL}/api/accountability/users`, {
                 headers: {
@@ -72,6 +74,8 @@ const Dashboard = () => {
             }
         } catch (error) {
             console.error("Error fetching users:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -115,6 +119,7 @@ const Dashboard = () => {
         const storedUser = localStorage.getItem("user");
         const user = storedUser ? JSON.parse(storedUser) : null;
         try {
+            setLoading(true);
             const token = localStorage.getItem("token");
             const response = await axios.get(
                 `${API_BASE_URL}/api/accountability/pending-requests?userId=${user?.id}`,
@@ -125,11 +130,14 @@ const Dashboard = () => {
             setPendingRequests(response.data || []);
         } catch (error) {
             console.error("Error fetching pending requests:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const fetchPartnerGoals = async (partnerId) => {
         try {
+            setLoading(true);
             const token = localStorage.getItem("token");
             const response = await axios.get(
                 `${API_BASE_URL}/api/accountability/partnerGoals?partnerId=${partnerId}`,
@@ -139,6 +147,8 @@ const Dashboard = () => {
             setIsModalOpen(true);
         } catch (error) {
             console.error("Error fetching partner's goals:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -192,6 +202,7 @@ const Dashboard = () => {
         const user = storedUser ? JSON.parse(storedUser) : null;
         const token = localStorage.getItem("token");
         try {
+            setLoading(true);
             const response = await axios.delete(
                 `${API_BASE_URL}/api/accountability/remove-partner?userId=${user?.id}&partnerId=${partnerId}`,
                 {
@@ -208,6 +219,8 @@ const Dashboard = () => {
             fetchUsers();
         } catch (error) {
             console.error("Error removing partner:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -220,6 +233,7 @@ const Dashboard = () => {
 
     return (
         <div className="container">
+            {loading && <Loader />} {/* Show loader while fetching data */}
             {showInstallAlert && (
                 <div className="install-banner">
                     <p>Install this app for a better experience!</p>
@@ -235,7 +249,7 @@ const Dashboard = () => {
                 <button onClick={handleLogout} className="logout">Logout</button>
             </div>
 
-            {partners.length > 0 ? (
+            {loading ? <Loader /> : partners.length > 0 ? (
                 <div className="partner-section">
                     <h3>Current Accountability Partners:</h3>
                     <div className="partners-container">  {/* Added wrapper for scrolling */}
@@ -264,7 +278,9 @@ const Dashboard = () => {
                         <h2>Partner's Goals</h2>
                         <button className="close-modal" onClick={() => setIsModalOpen(false)}>Close</button>
                         <div className="goal-list">
-                            {partnerGoals.length > 0 ? (
+                            {loading ? (
+                                <Loader />
+                            ) : partnerGoals.length > 0 ? (
                                 <ul>
                                     {partnerGoals.map((goal) => (
                                         <li key={goal.id}>{goal.title} - {goal.description}</li>
@@ -277,7 +293,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             )}
-            {pendingRequests.length > 0 && (
+            {loading ? <Loader /> : pendingRequests.length > 0 && (
                 <div className="pending-requests">
                     <h2>Pending Requests</h2>
                     <ul>
@@ -302,7 +318,7 @@ const Dashboard = () => {
                 </div>
             )}
             <h2>Available Users</h2>
-            {users.length === 0 ? (
+            {loading ? <Loader /> : users.length === 0 ? (
                 <p>No users available.</p>
             ) : (
                 <div className="users-container">

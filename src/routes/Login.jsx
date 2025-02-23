@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { loginUser } from "../api/auth"; 
 import { useNavigate } from "react-router-dom";
+import Loader from "./Loader";
 import axios from "axios";
 const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
 import "./Login.css"
@@ -10,10 +11,12 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError(""); 
+        setLoading(true);
         try {
             const response = await axios.post(`${API_BASE_URL}/auth/login`, {
                 email,
@@ -35,37 +38,18 @@ const Login = () => {
             } else {
                 setError("Network error. Please check your connection.");
             }
+        } finally {
+            setLoading(false); // Stop loading
         }
     };
-
-    // return (
-    //     <div>
-    //         <h2>Login</h2>
-    //         {error && <p style={{ color: "red" }}>{error}</p>}
-    //         <form onSubmit={handleLogin}>
-    //             <input
-    //                 type="email"
-    //                 placeholder="Email"
-    //                 value={email}
-    //                 onChange={(e) => setEmail(e.target.value)}
-    //                 required
-    //             />
-    //             <input
-    //                 type="password"
-    //                 placeholder="Password"
-    //                 value={password}
-    //                 onChange={(e) => setPassword(e.target.value)}
-    //                 required
-    //             />
-    //             <button type="submit">Login</button>
-    //         </form>
-    //     </div>
-    // );
 
     return (
         <div className="login-container">
             <h2>Login</h2>
             {error && <p className="error-message">{error}</p>}
+            {loading ? (
+                <Loader /> // Show Loader while logging in
+            ) : (
             <form onSubmit={handleLogin}>
                 <input
                     type="email"
@@ -84,6 +68,7 @@ const Login = () => {
                 <button type="submit">Login</button>
                 <button onClick={() => navigate("/register")}>Register</button>
             </form>
+            )}
         </div>
     );
 };

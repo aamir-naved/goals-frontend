@@ -1,0 +1,105 @@
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f5f7fa;
+    /* Light subtle background */
+    position: relative;
+    overflow: hidden;
+}
+
+/* 🎯 Target (Goal) */
+.loader {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #007BFF;
+    /* Outer ring - Blue */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Inner Goal Rings */
+.loader::before,
+.loader::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+}
+
+.loader::before {
+    width: 70px;
+    height: 70px;
+    background: #ffffff;
+    /* Middle ring - White */
+}
+
+.loader::after {
+    width: 40px;
+    height: 40px;
+    background: #FF0000;
+    /* Bullseye - Red */
+}
+
+/* 🏹 Arrow */
+.arrow {
+    position: absolute;
+    width: 80px;
+    height: 5px;
+    background: #4a90e2;
+    /* Arrow shaft */
+    top: 50%;
+    left: -100px;
+    display: flex;
+    align-items: center;
+    animation: shootArrow 2s ease-in-out infinite;
+}
+
+/* Arrowhead */
+.arrow::before {
+    content: "";
+    position: absolute;
+    right: -10px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid #4a90e2;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+}
+
+/* Fletching (Feathers) */
+.arrow::after {
+    content: "";
+    position: absolute;
+    left: -10px;
+    width: 0;
+    height: 0;
+    border-right: 12px solid #4a90e2;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+}
+
+/* 🎯 Animation: Arrow Shooting and Passing Through */
+@keyframes shootArrow {
+    0% {
+        left: -100px;
+        transform: translateY(-50%);
+        opacity: 1;
+    }
+
+    50% {
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        opacity: 1;
+    }
+
+    100% {
+        left: 120%;
+        transform: translateY(-50%);
+        opacity: 0;
+    }
+}

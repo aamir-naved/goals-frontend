@@ -74,3 +74,13 @@ p {
     font-size: 14px;
     margin-top: 10px;
 }
+
+.error-message {
+    color: red;
+    background: #ffe6e6;
+    padding: 10px;
+    border: 1px solid red;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+}

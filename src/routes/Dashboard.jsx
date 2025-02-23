@@ -238,22 +238,25 @@ const Dashboard = () => {
             {partners.length > 0 ? (
                 <div className="partner-section">
                     <h3>Current Accountability Partners:</h3>
-                    {partners.map((partner) => (
-                        <div key={partner.id} className="partner-card">
-                            <p><strong>Name:</strong> {partner.name}</p>
-                            <p><strong>Email:</strong> {partner.email}</p>
-                            <button onClick={() => removePartner(partner.id)} className="remove-partner">
-                                Remove Partner
-                            </button>
-                            <button onClick={() => fetchPartnerGoals(partner.id)} className="show-goals">
-                                View Goals
-                            </button>
-                        </div>
-                    ))}
+                    <div className="partners-container">  {/* Added wrapper for scrolling */}
+                        {partners.map((partner) => (
+                            <div key={partner.id} className="partner-card">
+                                <p><strong>Name:</strong> {partner.name}</p>
+                                <p><strong>Email:</strong> {partner.email}</p>
+                                <button onClick={() => removePartner(partner.id)} className="remove-partner">
+                                    Remove Partner
+                                </button>
+                                <button onClick={() => fetchPartnerGoals(partner.id)} className="show-goals">
+                                    View Goals
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             ) : (
                 <p className="no-partner">You don't have an accountability partner yet.</p>
             )}
+
 
             {isModalOpen && (
                 <div className="modal-overlay">

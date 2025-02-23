@@ -13,6 +13,7 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setError(""); 
         try {
             const response = await axios.post(`${API_BASE_URL}/auth/login`, {
                 email,
@@ -25,7 +26,15 @@ const Login = () => {
 
             navigate("/dashboard"); // Redirect to dashboard
         } catch (error) {
-            console.error("Login failed:", error);
+            if (error.response) {
+                if (error.response.status === 401) {
+                    setError("Invalid email or password. Please try again.");
+                } else {
+                    setError("Something went wrong. Please try again later.");
+                }
+            } else {
+                setError("Network error. Please check your connection.");
+            }
         }
     };
 
@@ -56,7 +65,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <h2>Login</h2>
-            {error && <p>{error}</p>}
+            {error && <p className="error-message">{error}</p>}
             <form onSubmit={handleLogin}>
                 <input
                     type="email"

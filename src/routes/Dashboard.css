@@ -205,3 +205,62 @@ h2 {
 .show-goals:hover {
     background-color: #0056b3;
 }
+
+/* Users Container */
+.users-container {
+    max-height: 300px;
+    /* Adjust height as needed */
+    overflow-y: auto;
+    /* Enables scrolling */
+    padding: 10px;
+    border: 1px solid #ddd;
+    /* Optional: adds a border for a cleaner UI */
+    border-radius: 8px;
+    background: #f9f9f9;
+}
+
+/* Users List */
+.users-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* User Item */
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons */
+.send-request,
+.remove-partner {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.send-request {
+    background-color: #007bff;
+    color: white;
+}
+
+.remove-partner {
+    background-color: #dc3545;
+    color: white;
+}
+
+.send-request:hover {
+    background-color: #0056b3;
+}
+
+.remove-partner:hover {
+    background-color: #c82333;
+}

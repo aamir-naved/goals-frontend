@@ -336,6 +336,7 @@ const Dashboard = () => {
             {users.length === 0 ? (
                 <p>No users available.</p>
             ) : (
+                <div className="users-container">
                 <ul className="users-list">
                     {users.map((user) => (
                         <li key={user.id} className="user-item">
@@ -350,6 +351,7 @@ const Dashboard = () => {
                         </li>
                     ))}
                 </ul>
+                </div>
             )}
         </div>
     );

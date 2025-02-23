@@ -260,7 +260,7 @@ const Dashboard = () => {
 
     return (
         <div className="container">
-            <h2>Dashboard , Hello {user?.name}, ID - {user?.id}</h2>
+            <h2>Dashboard , Hello {user?.name}</h2>
 
             <div className="button-group">
                 <Link to="/goals">
@@ -340,8 +340,6 @@ const Dashboard = () => {
                     {users.map((user) => (
                         <li key={user.id} className="user-item">
                             <span>Name: {user.name}</span>
-                            <span>, User Id {user.id}</span>
-
                             {user.id === partnerId ? (
                                 <button onClick={removePartner} className="remove-partner">
                                     Remove Partner

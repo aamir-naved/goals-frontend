@@ -7,12 +7,15 @@ import "./Dashboard.css"
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const [showInstallAlert, setShowInstallAlert] = useState(false);
     const [users, setUsers] = useState([]);  // Initialize as an empty array
     const [partners, setPartners] = useState([]);
     const [partnerId, setPartnerId] = useState(null);
     const [pendingRequests, setPendingRequests] = useState([]);
     const [partnerGoals, setPartnerGoals] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
     
@@ -22,8 +25,34 @@ const Dashboard = () => {
         fetchUsers();
         fetchPartner();
         fetchPendingRequests();
+        const handleBeforeInstallPrompt = (event) => {
+            event.preventDefault();
+            setDeferredPrompt(event);
+            setShowInstallAlert(true);
+        };
+
+        window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+        return () => {
+            window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+        };
     }, []);
 
+
+    const handleInstallClick = () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === "accepted") {
+                    console.log("User accepted the install prompt");
+                } else {
+                    console.log("User dismissed the install prompt");
+                }
+                setDeferredPrompt(null);
+                setShowInstallAlert(false);
+            });
+        }
+    };
 
 
     const fetchUsers = async () => {
@@ -49,6 +78,7 @@ const Dashboard = () => {
     const fetchPartner = async () => {
         console.log("Fetching partner....")
         const token = localStorage.getItem("token");
+        setLoading(true);
         const storedUser = localStorage.getItem("user");
         const user = storedUser ? JSON.parse(storedUser) : null;
         console.log("Logged In user")
@@ -76,6 +106,8 @@ const Dashboard = () => {
             }
         } catch (error) {
             console.error("Error fetching accountability partner:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -186,81 +218,15 @@ const Dashboard = () => {
         navigate("/login");
     };
 
-    // return (
-    //     <div className="container mx-auto p-4">
-    //         <h2 className="text-2xl font-bold mb-4">Dashboard , Hello {user?.name}, ID - {user?.id}</h2>
-
-    //         <div className="mb-4">
-    //             <Link to="/goals">
-    //                 <button className="bg-blue-500 text-white px-4 py-2 mr-2">View Goals</button>
-    //             </Link>
-    //             <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2">
-    //                 Logout
-    //             </button>
-    //         </div>
-
-    //         {partner ? (
-    //             <div className="p-4 bg-green-200 rounded mb-4">
-    //                 <p><strong>Current Accountability Partner:</strong> {partner.name}</p>
-    //                 <button onClick={removePartner} className="bg-red-500 text-white px-4 py-2 mt-2">Remove Partner</button>
-    //             </div>
-    //         ) : (
-    //             <p className="mb-4">You don't have an accountability partner yet.</p>
-    //         )}
-
-
-    //         {/* ✅ Pending Requests Section */}
-    //         {pendingRequests.length > 0 && (
-    //             <div className="p-4 bg-yellow-100 rounded mb-4">
-    //                 <h2 className="text-xl font-semibold mb-2">Pending Requests</h2>
-    //                 <ul>
-    //                     {pendingRequests.map((request) => (
-    //                         <li key={request.id} className="flex justify-between items-center p-2 border-b">
-    //                             <span>{request.user.name} wants to be your accountability partner</span>
-    //                             <div>
-    //                                 <button onClick={() => respondToRequest(request.user.id, true)} className="bg-green-500 text-white px-3 py-1 rounded-md mr-2">
-    //                                     Accept
-    //                                 </button>
-    //                                 <button onClick={() => respondToRequest(request.user.id, false)} className="bg-red-500 text-white px-3 py-1 rounded-md">
-    //                                     Reject
-    //                                 </button>
-    //                             </div>
-    //                         </li>
-    //                     ))}
-    //                 </ul>
-    //             </div>
-    //         )}
-            
-
-    //         <h2 className="text-xl font-semibold mb-2">Available Users</h2>
-    //         {users.length === 0 ? (
-    //             <p>No users available.</p>
-    //         ) : (
-    //             <ul className="space-y-2">
-    //                 {users.map((user) => (
-    //                     <li key={user.id} className="p-3 bg-gray-100 rounded flex justify-between items-center">
-    //                         <span>Name: {user.name}</span>
-    //                         <span>, User Id {user.id}</span>
-    //                         <span></span>
-
-    //                         {user.id === partnerId ? (
-    //                             <button onClick={removePartner} className="bg-red-500 text-white px-4 py-2">
-    //                                 Remove Partner
-    //                             </button>
-    //                         ) : (
-    //                             <button onClick={() => sendRequest(user.id)} className="bg-blue-500 text-white px-3 py-1">Send Request</button>
-    //                         )}
-    //                     </li>
-    //                 ))}
-    //             </ul>
-    //         )}
-
-    //     </div>
-    // );
-
     return (
         <div className="container">
-            <h2>Dashboard , Hello {user?.name}</h2>
+            {showInstallAlert && (
+                <div className="install-banner">
+                    <p>Install this app for a better experience!</p>
+                    <button onClick={handleInstallClick} className="install-btn">Install</button>
+                </div>
+            )}
+            <h2>Hello There! {user?.name} 🙋</h2>
 
             <div className="button-group">
                 <Link to="/goals">

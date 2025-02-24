@@ -253,6 +253,7 @@ const Goals = () => {
                             onChange={handleInputChange}
                             min="0"
                             max="100"
+                            placeholder="Completion Percentage"
                         />
                         <label>
                             Completed:

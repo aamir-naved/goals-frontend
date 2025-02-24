@@ -17,20 +17,60 @@ const ChatModal = ({ partner, onClose }) => {
     console.log(userIdNew)
     
 
+    // useEffect(() => {
+    //     const token = localStorage.getItem("token");
+
+    //     // Fetch initial chat history
+    //     axios.get(`${API_BASE_URL}/api/messages/${userIdNew}/${partner.id}`, {
+    //         headers: { Authorization: `Bearer ${token}` }
+    //     })
+    //         .then(response => setMessages(response.data))
+    //         .catch(error => console.error("Error fetching messages:", error));
+
+    //     // Set up SSE for real-time updates
+    //     const eventSource = new EventSource(`${API_BASE_URL}/api/messages/stream/${userIdNew}?token=${token}`);
+    //     eventSource.onmessage = (event) => {
+    //         const receivedMessage = JSON.parse(event.data);
+    //         if (
+    //             (receivedMessage.senderId === userIdNew && receivedMessage.receiverId === partner.id) ||
+    //             (receivedMessage.senderId === partner.id && receivedMessage.receiverId === userIdNew)
+    //         ) {
+    //             setMessages(prevMessages => [...prevMessages, receivedMessage]);
+    //         }
+    //     };
+
+    //     eventSource.onerror = (error) => {
+    //         console.error("SSE Error:", error);
+    //         eventSource.close();
+    //     };
+
+    //     return () => {
+    //         eventSource.close();
+    //     };
+    // }, [partner.id]);
+
+
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        // Fetch initial chat history
+        // 🛠️ Debug: Fetch initial chat history
+        console.log("Fetching chat history for:", userIdNew, "with", partner.id);
+
         axios.get(`${API_BASE_URL}/api/messages/${userIdNew}/${partner.id}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
-            .then(response => setMessages(response.data))
-            .catch(error => console.error("Error fetching messages:", error));
+            .then(response => {
+                console.log("✅ Chat history loaded:", response.data);
+                setMessages(response.data);
+            })
+            .catch(error => console.error("❌ Error fetching messages:", error));
 
         // Set up SSE for real-time updates
         const eventSource = new EventSource(`${API_BASE_URL}/api/messages/stream/${userIdNew}?token=${token}`);
         eventSource.onmessage = (event) => {
             const receivedMessage = JSON.parse(event.data);
+            console.log("📩 Received SSE message:", receivedMessage);
+
             if (
                 (receivedMessage.senderId === userIdNew && receivedMessage.receiverId === partner.id) ||
                 (receivedMessage.senderId === partner.id && receivedMessage.receiverId === userIdNew)
@@ -40,7 +80,7 @@ const ChatModal = ({ partner, onClose }) => {
         };
 
         eventSource.onerror = (error) => {
-            console.error("SSE Error:", error);
+            console.error("❌ SSE Error:", error);
             eventSource.close();
         };
 
@@ -48,6 +88,7 @@ const ChatModal = ({ partner, onClose }) => {
             eventSource.close();
         };
     }, [partner.id]);
+
 
     const sendMessage = async () => {
         if (!newMessage.trim()) return;

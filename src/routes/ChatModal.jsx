@@ -4,7 +4,7 @@ import './ChatModal.css'; // Ensure styling for the modal
 
 const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
 
-const ChatModal = ({ partner, userId, onClose }) => {
+const ChatModal = ({ partner, onClose }) => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const storedUser = localStorage.getItem("user");
@@ -47,7 +47,7 @@ const ChatModal = ({ partner, userId, onClose }) => {
         return () => {
             eventSource.close();
         };
-    }, [partner.id, user?.id]);
+    }, [partner.id]);
 
     const sendMessage = async () => {
         if (!newMessage.trim()) return;

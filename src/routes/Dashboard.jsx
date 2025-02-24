@@ -280,7 +280,7 @@ const Dashboard = () => {
             )}
 
             {selectedPartner && (
-                <ChatModal partner={selectedPartner} userId={1234} onClose={() => setSelectedPartner(null)} />
+                <ChatModal partner={selectedPartner} onClose={() => setSelectedPartner(null)} />
             )}
 
 

@@ -7,12 +7,19 @@ const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
 const ChatModal = ({ partner, userId, onClose }) => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    console.log("Inside ChatModal")
+    console.log("Partner: ")
+    console.log(partner)
+    console.log("UserId: ")
+    console.log(userId)
 
     useEffect(() => {
         const token = localStorage.getItem("token");
 
         // Fetch initial chat history
-        axios.get(`${API_BASE_URL}/api/messages/${userId}/${partner.id}`, {
+        axios.get(`${API_BASE_URL}/api/messages/${user?.id}/${partner.id}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => setMessages(response.data))

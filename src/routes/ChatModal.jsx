@@ -10,85 +10,24 @@ const ChatModal = ({ partner, onClose }) => {
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const userIdNew = user?.id;
-    console.log("Inside ChatModal")
-    console.log("Partner: ")
-    console.log(partner)
-    console.log("UserId: ")
-    console.log(userIdNew)
-    
-
-    // useEffect(() => {
-    //     const token = localStorage.getItem("token");
-
-    //     // Fetch initial chat history
-    //     axios.get(`${API_BASE_URL}/api/messages/${userIdNew}/${partner.id}`, {
-    //         headers: { Authorization: `Bearer ${token}` }
-    //     })
-    //         .then(response => setMessages(response.data))
-    //         .catch(error => console.error("Error fetching messages:", error));
-
-    //     // Set up SSE for real-time updates
-    //     const eventSource = new EventSource(`${API_BASE_URL}/api/messages/stream/${userIdNew}?token=${token}`);
-    //     eventSource.onmessage = (event) => {
-    //         const receivedMessage = JSON.parse(event.data);
-    //         if (
-    //             (receivedMessage.senderId === userIdNew && receivedMessage.receiverId === partner.id) ||
-    //             (receivedMessage.senderId === partner.id && receivedMessage.receiverId === userIdNew)
-    //         ) {
-    //             setMessages(prevMessages => [...prevMessages, receivedMessage]);
-    //         }
-    //     };
-
-    //     eventSource.onerror = (error) => {
-    //         console.error("SSE Error:", error);
-    //         eventSource.close();
-    //     };
-
-    //     return () => {
-    //         eventSource.close();
-    //     };
-    // }, [partner.id]);
-
 
     useEffect(() => {
+        fetchMessages();
+    }, [partner.id]);  // Fetch messages when partner changes
+
+    const fetchMessages = async () => {
         const token = localStorage.getItem("token");
+        if (!token) return;
 
-        // 🛠️ Debug: Fetch initial chat history
-        console.log("Fetching chat history for:", userIdNew, "with", partner.id);
-
-        axios.get(`${API_BASE_URL}/api/messages/${userIdNew}/${partner.id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-        })
-            .then(response => {
-                console.log("✅ Chat history loaded:", response.data);
-                setMessages(response.data);
-            })
-            .catch(error => console.error("❌ Error fetching messages:", error));
-
-        // Set up SSE for real-time updates
-        const eventSource = new EventSource(`${API_BASE_URL}/api/messages/stream/${userIdNew}?token=${token}`);
-        eventSource.onmessage = (event) => {
-            const receivedMessage = JSON.parse(event.data);
-            console.log("📩 Received SSE message:", receivedMessage);
-
-            if (
-                (receivedMessage.senderId === userIdNew && receivedMessage.receiverId === partner.id) ||
-                (receivedMessage.senderId === partner.id && receivedMessage.receiverId === userIdNew)
-            ) {
-                setMessages(prevMessages => [...prevMessages, receivedMessage]);
-            }
-        };
-
-        eventSource.onerror = (error) => {
-            console.error("❌ SSE Error:", error);
-            eventSource.close();
-        };
-
-        return () => {
-            eventSource.close();
-        };
-    }, [partner.id]);
-
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/messages/${userIdNew}/${partner.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setMessages(response.data);
+        } catch (error) {
+            console.error("❌ Error fetching messages:", error);
+        }
+    };
 
     const sendMessage = async () => {
         if (!newMessage.trim()) return;
@@ -108,6 +47,7 @@ const ChatModal = ({ partner, onClose }) => {
                 }
             });
             setNewMessage('');
+            fetchMessages(); // Fetch messages again after sending
         } catch (error) {
             console.error("Error sending message:", error);
         }

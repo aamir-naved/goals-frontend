@@ -26,7 +26,7 @@ const ChatModal = ({ partner, userId, onClose }) => {
             .catch(error => console.error("Error fetching messages:", error));
 
         // Set up SSE for real-time updates
-        const eventSource = new EventSource(`${API_BASE_URL}/api/messages/stream/${userId}`);
+        const eventSource = new EventSource(`${API_BASE_URL}/api/messages/stream/${userId}?token=${token}`);
         eventSource.onmessage = (event) => {
             const receivedMessage = JSON.parse(event.data);
             if (
@@ -37,10 +37,15 @@ const ChatModal = ({ partner, userId, onClose }) => {
             }
         };
 
+        eventSource.onerror = (error) => {
+            console.error("SSE Error:", error);
+            eventSource.close();
+        };
+
         return () => {
             eventSource.close();
         };
-    }, [partner.id, userId]);
+    }, [partner.id, user?.id]);
 
     const sendMessage = async () => {
         if (!newMessage.trim()) return;

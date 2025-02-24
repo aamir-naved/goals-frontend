@@ -271,12 +271,16 @@ const Dashboard = () => {
                             </div>
                         ))}
                     </div>
-                    {selectedPartner && (
+                    {/* {selectedPartner && (
                         <ChatModal partner={selectedPartner} userId={1234} onClose={() => setSelectedPartner(null)} />
-                    )}
+                    )} */}
                 </div>
             ) : (
                 <p className="no-partner">You don't have an accountability partner yet.</p>
+            )}
+
+            {selectedPartner && (
+                <ChatModal partner={selectedPartner} userId={1234} onClose={() => setSelectedPartner(null)} />
             )}
 
 

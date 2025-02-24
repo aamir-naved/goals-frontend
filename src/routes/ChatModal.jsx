@@ -78,7 +78,7 @@ const ChatModal = ({ partner, onClose }) => {
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type a message..."
                     />
-                    <button onClick={sendMessage}>Send</button>
+                    <button className='chat-send' onClick={sendMessage}>Send</button>
                 </div>
             </div>
         </div>

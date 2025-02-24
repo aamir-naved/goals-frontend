@@ -57,16 +57,16 @@ const ChatModal = ({ partner, onClose }) => {
     return (
         <div className="chat-modal-overlay">
             <div className="chat-modal">
-                <button className="chat-close-button" onClick={onClose}>X</button>
+                <button className="close-button" onClick={onClose}>X</button>
                 <h3>Chat with {partner.name}</h3>
                 <div className="chat-history">
                     {messages.map((msg, index) => {
                         const isSent = msg.senderId === userIdNew;
                         return (
-                            <div key={index} className={`chat-message ${isSent ? 'chat-sent' : 'chat-received'}`}>
+                            <div key={index} className={`message ${isSent ? 'sent' : 'received'}`}>
                                 {msg.content}
                                 {/* Debugging Info */}
-                                <span className="chat-debug-info">({msg.senderId} → {msg.receiverId})</span>
+                                <span className="debug-info">({msg.senderId} → {msg.receiverId})</span>
                             </div>
                         );
                     })}

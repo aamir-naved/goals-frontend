@@ -13,7 +13,7 @@ const ChatModal = ({ partner, onClose }) => {
 
     useEffect(() => {
         fetchMessages();
-    }, [partner.id]);  // Fetch messages when partner changes
+    }, [partner.id, messages.length]);  // Re-fetch messages when partner changes or new message is added
 
     const fetchMessages = async () => {
         const token = localStorage.getItem("token");
@@ -23,6 +23,7 @@ const ChatModal = ({ partner, onClose }) => {
             const response = await axios.get(`${API_BASE_URL}/api/messages/${userIdNew}/${partner.id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+            console.log("📥 Fetched messages:", response.data);
             setMessages(response.data);
         } catch (error) {
             console.error("❌ Error fetching messages:", error);
@@ -49,21 +50,26 @@ const ChatModal = ({ partner, onClose }) => {
             setNewMessage('');
             fetchMessages(); // Fetch messages again after sending
         } catch (error) {
-            console.error("Error sending message:", error);
+            console.error("❌ Error sending message:", error);
         }
     };
 
     return (
-        <div className="chat-modal">
-            <div className="chat-content">
+        <div className="chat-modal-overlay">
+            <div className="chat-modal">
                 <button className="close-button" onClick={onClose}>X</button>
                 <h3>Chat with {partner.name}</h3>
                 <div className="chat-history">
-                    {messages.map((msg, index) => (
-                        <div key={index} className={`message ${msg.senderId === userIdNew ? 'sent' : 'received'}`}>
-                            {msg.content}
-                        </div>
-                    ))}
+                    {messages.map((msg, index) => {
+                        const isSent = msg.senderId === userIdNew;
+                        return (
+                            <div key={index} className={`message ${isSent ? 'sent' : 'received'}`}>
+                                {msg.content}
+                                {/* Debugging Info */}
+                                <span className="debug-info">({msg.senderId} → {msg.receiverId})</span>
+                            </div>
+                        );
+                    })}
                 </div>
                 <div className="chat-input">
                     <input

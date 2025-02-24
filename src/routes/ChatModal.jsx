@@ -14,12 +14,13 @@ const ChatModal = ({ partner, userId, onClose }) => {
     console.log(partner)
     console.log("UserId: ")
     console.log(userId)
+    const userId = user?.id;
 
     useEffect(() => {
         const token = localStorage.getItem("token");
 
         // Fetch initial chat history
-        axios.get(`${API_BASE_URL}/api/messages/${user?.id}/${partner.id}`, {
+        axios.get(`${API_BASE_URL}/api/messages/${userId}/${partner.id}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(response => setMessages(response.data))

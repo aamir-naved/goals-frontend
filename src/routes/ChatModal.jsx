@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './ChatModal.css'; // Ensure styling for the modal
 
@@ -10,6 +10,9 @@ const ChatModal = ({ partner, onClose }) => {
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const userIdNew = user?.id;
+
+    // Create a reference to the chat history container
+    const chatHistoryRef = useRef(null);
 
     useEffect(() => {
         fetchMessages();
@@ -54,6 +57,18 @@ const ChatModal = ({ partner, onClose }) => {
         }
     };
 
+    // Function to scroll to the bottom of the chat
+    const scrollToBottom = () => {
+        if (chatHistoryRef.current) {
+            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+        }
+    };
+
+    // Scroll to the bottom when messages change
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
     return (
         <div className="chat-modal-overlay">
             <div className="chat-modal">
@@ -78,7 +93,7 @@ const ChatModal = ({ partner, onClose }) => {
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type a message..."
                     />
-                    <button className='chat-send' onClick={sendMessage}>Send</button>
+                    <button onClick={sendMessage}>Send</button>
                 </div>
             </div>
         </div>

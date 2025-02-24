@@ -120,7 +120,7 @@ const ChatModal = ({ partner, onClose }) => {
                 <h3>Chat with {partner.name}</h3>
                 <div className="chat-history">
                     {messages.map((msg, index) => (
-                        <div key={index} className={msg.senderId === userIdNew ? 'message sent' : 'message received'}>
+                        <div key={index} className={`message ${msg.senderId === userIdNew ? 'sent' : 'received'}`}>
                             {msg.content}
                         </div>
                     ))}

@@ -10,6 +10,9 @@ function Home() {
             <div className="button-container">
                 <button onClick={() => navigate("/register")}>Register</button>
                 <button onClick={() => navigate("/login")}>Login</button>
+                <button onClick={() => window.location.href = "/prayer-times.html"}>
+                    Prayer Times
+                </button>
             </div>
         </div>
     );

@@ -4,39 +4,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prayer Times WebApp</title>
+    <title>Prayer Times</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
+            background-color: #f8f9fa;
         }
 
-        button {
-            padding: 10px;
-            margin: 10px;
-            font-size: 16px;
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: #222;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .fetch-location {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .fetch-location:hover {
+            background-color: #0056b3;
+        }
+
+        .fetch-prayer-times {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .fetch-prayer-times:hover {
+            background-color: #218838;
+        }
+
+        #location {
+            font-size: 16px;
+            color: #555;
+            margin-top: 10px;
         }
 
         #prayer-times {
             margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            display: inline-block;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
             text-align: left;
+        }
+
+        #prayer-times h3 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        #prayer-times p {
+            font-size: 16px;
+            margin: 5px 0;
         }
     </style>
 </head>
 
 <body>
 
-    <h2>Simple Prayer Time Web App</h2>
-    <button onclick="getLocation()">📍 Fetch My Location</button>
-    <button onclick="fetchPrayerTimes()">🕌 Show Me Prayer Time</button>
+    <div class="container">
+        <h2>Prayer Times | Fiqh - Hanafi</h2>
 
-    <p id="location"></p>
-    <div id="prayer-times"></div>
+        <div class="button-group">
+            <button class="button fetch-location" onclick="getLocation()">📍 Fetch My Location</button>
+            <button class="button fetch-prayer-times" onclick="fetchPrayerTimes()">🕌 Show Me Prayer Times</button>
+        </div>
+
+        <p id="location"></p>
+        <div id="prayer-times"></div>
+    </div>
 
     <script>
         let latitude = null;

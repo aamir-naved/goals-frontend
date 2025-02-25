@@ -4,7 +4,8 @@ import "./Chatbot.css";
 function Chatbot() {
     const [message, setMessage] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
-    const API_BASE_URL = "http://192.168.110.229:8000"; // Your local FastAPI backend
+    // const API_BASE_URL = "http://192.168.110.229:8000"; // Your local FastAPI backend
+    const API_BASE_URL = "https://ae20-2401-4900-5aa9-68cc-1505-481a-1d16-a33d.ngrok-free.app"; // NEW ngrok URL
 
     const sendMessage = async () => {
         if (!message.trim()) return; // Prevent sending empty messages

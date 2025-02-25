@@ -2,32 +2,35 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import axios from "axios";
-const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
-import "./Dashboard.css"
-import ChatModal from './ChatModal';
+import ChatModal from "./ChatModal";
+import "./Dashboard.css";
 
+const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [showInstallAlert, setShowInstallAlert] = useState(false);
-    const [users, setUsers] = useState([]);  // Initialize as an empty array
+    const [users, setUsers] = useState([]);
     const [partners, setPartners] = useState([]);
-    const [partnerId, setPartnerId] = useState(null);
     const [pendingRequests, setPendingRequests] = useState([]);
     const [partnerGoals, setPartnerGoals] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [selectedPartner, setSelectedPartner] = useState(null);
+    const [error, setError] = useState(null); // Added for error handling
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
-    
-    
 
     useEffect(() => {
+        if (!user) {
+            navigate("/login"); // Redirect if no user
+            return;
+        }
         fetchUsers();
         fetchPartner();
         fetchPendingRequests();
+
         const handleBeforeInstallPrompt = (event) => {
             event.preventDefault();
             setDeferredPrompt(event);
@@ -35,46 +38,29 @@ const Dashboard = () => {
         };
 
         window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+        return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    }, [navigate, user]);
 
-        return () => {
-            window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-        };
-    }, []);
-
-
-    const handleInstallClick = () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === "accepted") {
-                    console.log("User accepted the install prompt");
-                } else {
-                    console.log("User dismissed the install prompt");
-                }
-                setDeferredPrompt(null);
-                setShowInstallAlert(false);
-            });
-        }
+    const handleInstallClick = async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User ${outcome === "accepted" ? "accepted" : "dismissed"} the install prompt`);
+        setDeferredPrompt(null);
+        setShowInstallAlert(false);
     };
 
-
     const fetchUsers = async () => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
+            const token = localStorage.getItem("token");
             const response = await axios.get(`${API_BASE_URL}/api/accountability/users`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
-
-            if (Array.isArray(response.data)) {
-                setUsers(response.data);
-            } else {
-                setUsers([]);
-                console.error("Unexpected response format:", response.data);
-            }
+            setUsers(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
+            setError("Failed to fetch users. Please try again.");
             console.error("Error fetching users:", error);
         } finally {
             setLoading(false);
@@ -82,55 +68,35 @@ const Dashboard = () => {
     };
 
     const fetchPartner = async () => {
-        console.log("Fetching partner....")
-        const token = localStorage.getItem("token");
         setLoading(true);
-        const storedUser = localStorage.getItem("user");
-        const user = storedUser ? JSON.parse(storedUser) : null;
-        console.log("Logged In user")
-        console.log(user);
-        
+        setError(null);
         try {
+            const token = localStorage.getItem("token");
             const response = await axios.get(
                 `${API_BASE_URL}/api/accountability/partners?userId=${user?.id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
+                { headers: { Authorization: `Bearer ${token}` } }
             );
-
-            console.log("Request made to fetch partner: Response:-")
-            console.log(response)
-
-            if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-                console.log("Received partners:", response.data);
-                setPartners(response.data);  // Now storing multiple partners
-            } else {
-                console.log("No accountability partners found.");
-                setPartners([]);
-            }
+            setPartners(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
-            console.error("Error fetching accountability partner:", error);
+            setError("Failed to fetch partners. Please try again.");
+            console.error("Error fetching partners:", error);
         } finally {
             setLoading(false);
         }
     };
 
     const fetchPendingRequests = async () => {
-        const storedUser = localStorage.getItem("user");
-        const user = storedUser ? JSON.parse(storedUser) : null;
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
             const token = localStorage.getItem("token");
             const response = await axios.get(
                 `${API_BASE_URL}/api/accountability/pending-requests?userId=${user?.id}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            console.log("We fetch pending request response:")
-            console.log(response.data)
-            setPendingRequests(response.data || []);
+            setPendingRequests(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
+            setError("Failed to fetch pending requests. Please try again.");
             console.error("Error fetching pending requests:", error);
         } finally {
             setLoading(false);
@@ -138,165 +104,143 @@ const Dashboard = () => {
     };
 
     const fetchPartnerGoals = async (partnerId) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
             const token = localStorage.getItem("token");
             const response = await axios.get(
                 `${API_BASE_URL}/api/accountability/partnerGoals?partnerId=${partnerId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            setPartnerGoals(response.data || []);
+            setPartnerGoals(Array.isArray(response.data) ? response.data : []);
             setIsModalOpen(true);
         } catch (error) {
-            console.error("Error fetching partner's goals:", error);
+            setError("Failed to fetch partner goals. Please try again.");
+            console.error("Error fetching partner goals:", error);
         } finally {
             setLoading(false);
         }
     };
 
     const sendRequest = async (receiverId) => {
-        const token = localStorage.getItem("token");
-        const storedUser = localStorage.getItem("user");
-        const user = storedUser ? JSON.parse(storedUser) : null;
         try {
+            const token = localStorage.getItem("token");
             const response = await axios.post(
                 `${API_BASE_URL}/api/accountability/send-request?senderId=${user?.id}&receiverId=${receiverId}`,
-                {},  // Empty body since parameters are passed in the URL
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
             );
-
-            alert(response.data); // Backend returns a message string
+            alert(response.data);
             fetchUsers();
+            fetchPendingRequests();
         } catch (error) {
             console.error("Error sending request:", error);
+            alert("Failed to send request.");
         }
     };
 
     const respondToRequest = async (senderId, accept) => {
-        const storedUser = localStorage.getItem("user");
-        const user = storedUser ? JSON.parse(storedUser) : null;
-        const token = localStorage.getItem("token");
         try {
+            const token = localStorage.getItem("token");
             const response = await axios.post(
                 `${API_BASE_URL}/api/accountability/respond-request?receiverId=${senderId}&senderId=${user?.id}&accept=${accept}`,
-                {},  // Empty body since parameters are passed in the URL
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
             );
-
-            alert(response.data); // Backend returns a message string
-            fetchPartner(); // Refresh partner status
-            fetchPendingRequests(); 
+            alert(response.data);
+            fetchPartner();
+            fetchPendingRequests();
         } catch (error) {
             console.error("Error responding to request:", error);
+            alert("Failed to respond to request.");
         }
     };
 
     const removePartner = async (partnerId) => {
-        const storedUser = localStorage.getItem("user");
-        const user = storedUser ? JSON.parse(storedUser) : null;
-        const token = localStorage.getItem("token");
+        setLoading(true);
         try {
-            setLoading(true);
+            const token = localStorage.getItem("token");
             const response = await axios.delete(
                 `${API_BASE_URL}/api/accountability/remove-partner?userId=${user?.id}&partnerId=${partnerId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
+                { headers: { Authorization: `Bearer ${token}` } }
             );
-
-            alert(response.data); // Backend returns a message string
-            setPartners([]);
-            setPartnerId(null); 
-            console.log("Partner Removed Successfully.")
+            alert(response.data);
+            setPartners(partners.filter((p) => p.id !== partnerId));
             fetchUsers();
         } catch (error) {
             console.error("Error removing partner:", error);
+            alert("Failed to remove partner.");
         } finally {
             setLoading(false);
         }
     };
 
     const handleLogout = () => {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-        localStorage.removeItem("userId");
+        localStorage.clear();
         navigate("/login");
     };
 
     return (
-        <div className="container">
-            {loading && <Loader />} {/* Show loader while fetching data */}
+        <div className="dashboard">
+            {loading && <Loader />}
             {showInstallAlert && (
                 <div className="install-banner">
                     <p>Install this app for a better experience!</p>
                     <button onClick={handleInstallClick} className="install-btn">Install</button>
                 </div>
             )}
-            <h1>Hello There! {user?.name} 🙋</h1>
+            <header className="dashboard-header">
+                <h1>Hello, {user?.name}! 🙋</h1>
+                <div className="button-group">
+                    <Link to="/goals"><button className="btn btn-primary">View Goals</button></Link>
+                    <button onClick={() => navigate("/prayer-times")} className="btn btn-secondary">Prayer Times</button>
+                    <button onClick={handleLogout} className="btn btn-danger">Logout</button>
+                </div>
+            </header>
 
-            <div className="button-group">
-                <Link to="/goals">
-                    <button className="view-goals">View Goals</button>
-                </Link>
-                <button onClick={handleLogout} className="logout">Logout</button>
-                <button onClick={() => navigate("/prayer-times")}>Prayer Times</button>
-            </div>
+            {error && <div className="error-message">{error}</div>}
 
-            {loading ? <Loader /> : partners.length > 0 ? (
-                <div className="partner-section">
-                    <h3>Current Accountability Partners:</h3>
-                    <div className="partners-container">  {/* Added wrapper for scrolling */}
+            <section className="partners-section">
+                <h2>Your Accountability Partners</h2>
+                {partners.length > 0 ? (
+                    <div className="partners-container">
                         {partners.map((partner) => (
                             <div key={partner.id} className="partner-card">
-                                <p><strong>Name:</strong> {partner.name}</p>
-                                <p><strong>Email:</strong> {partner.email}</p>
-                                <button onClick={() => removePartner(partner.id)} className="remove-partner">
-                                    Remove Partner
-                                </button>
-                                <button onClick={() => fetchPartnerGoals(partner.id)} className="show-goals">
-                                    View Goals
-                                </button>
-                                <button onClick={() => setSelectedPartner(partner)} className="chat-button">
-                                    Text
-                                </button>
+                                <div className="partner-info">
+                                    <p><strong>{partner.name}</strong></p>
+                                    <p>{partner.email}</p>
+                                </div>
+                                <div className="partner-actions">
+                                    <button onClick={() => fetchPartnerGoals(partner.id)} className="btn btn-info">View Goals</button>
+                                    <button onClick={() => setSelectedPartner(partner)} className="btn btn-chat">Chat</button>
+                                    <button onClick={() => removePartner(partner.id)} className="btn btn-danger">Remove</button>
+                                </div>
                             </div>
                         ))}
                     </div>
-                    {/* {selectedPartner && (
-                        <ChatModal partner={selectedPartner} userId={1234} onClose={() => setSelectedPartner(null)} />
-                    )} */}
-                </div>
-            ) : (
-                <p className="no-partner">You don't have an accountability partner yet.</p>
-            )}
+                ) : (
+                    <p className="no-data">No accountability partners yet.</p>
+                )}
+            </section>
 
             {selectedPartner && (
                 <ChatModal partner={selectedPartner} onClose={() => setSelectedPartner(null)} />
             )}
 
-
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <h2>Partner's Goals</h2>
-                        <button className="close-modal" onClick={() => setIsModalOpen(false)}>Close</button>
+                        <button className="btn btn-close" onClick={() => setIsModalOpen(false)}>✖</button>
                         <div className="goal-list">
                             {loading ? (
                                 <Loader />
                             ) : partnerGoals.length > 0 ? (
                                 <ul>
                                     {partnerGoals.map((goal) => (
-                                        <li key={goal.id}>{goal.title} - {goal.description}</li>
+                                        <li key={goal.id}>
+                                            <strong>{goal.title}</strong>: {goal.description}
+                                        </li>
                                     ))}
                                 </ul>
                             ) : (
@@ -306,54 +250,45 @@ const Dashboard = () => {
                     </div>
                 </div>
             )}
-            {loading ? <Loader /> : pendingRequests.length > 0 && (
-                <div className="pending-requests">
-                    <h2>Pending Requests</h2>
-                    <ul>
-                        {pendingRequests.map((request) => {
-                            console.log("Pending Request:", request); // Debugging
 
-                            return (
-                                <li key={request.id} className="request-item">
-                                    <span>{request.partnerName || "Unknown"}, ID - {request.partnerId } wants to be your accountability partner!</span>
-                                    <div>
-                                        <button onClick={() => respondToRequest(request.partnerId, true)} className="accept">
-                                            Accept
-                                        </button>
-                                        <button onClick={() => respondToRequest(request.partnerId, false)} className="reject">
-                                            Reject
-                                        </button>
-                                    </div>
-                                </li>
-                            );
-                        })}
+            <section className="pending-section">
+                <h2>Pending Requests</h2>
+                {pendingRequests.length > 0 ? (
+                    <ul className="pending-list">
+                        {pendingRequests.map((request) => (
+                            <li key={request.id} className="pending-item">
+                                <span>{request.partnerName || "Unknown"} (ID: {request.partnerId})</span>
+                                <div className="pending-actions">
+                                    <button onClick={() => respondToRequest(request.partnerId, true)} className="btn btn-success">Accept</button>
+                                    <button onClick={() => respondToRequest(request.partnerId, false)} className="btn btn-danger">Reject</button>
+                                </div>
+                            </li>
+                        ))}
                     </ul>
-                </div>
-            )}
-            <h2>Available Users</h2>
-            {loading ? <Loader /> : users.length === 0 ? (
-                <p>No users available.</p>
-            ) : (
-                <div className="users-container">
-                <ul className="users-list">
-                    {users.map((user) => (
-                        <li key={user.id} className="user-item">
-                            <span>Name: {user.name}</span>
-                            {user.id === partnerId ? (
-                                <button onClick={removePartner} className="remove-partner">
-                                    Remove Partner
-                                </button>
-                            ) : (
-                                <button onClick={() => sendRequest(user.id)} className="send-request">Send Request</button>
-                            )}
-                        </li>
-                    ))}
-                </ul>
-                </div>
-            )}
+                ) : (
+                    <p className="no-data">No pending requests.</p>
+                )}
+            </section>
+
+            <section className="users-section">
+                <h2>Available Users</h2>
+                {users.length > 0 ? (
+                    <div className="users-container">
+                        <ul className="users-list">
+                            {users.map((user) => (
+                                <li key={user.id} className="user-item">
+                                    <span>{user.name}</span>
+                                    <button onClick={() => sendRequest(user.id)} className="btn btn-primary">Send Request</button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ) : (
+                    <p className="no-data">No users available.</p>
+                )}
+            </section>
         </div>
     );
-
 };
 
 export default Dashboard;

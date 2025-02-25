@@ -1,144 +1,251 @@
+/* Container */
 .goals-container {
-    max-width: 900px;
-    margin: auto;
+    max-width: 1000px;
+    margin: 0 auto;
     padding: 20px;
-    position: relative;
-    /* Ensures proper positioning */
+    font-family: 'Arial', sans-serif;
+    background: #f4f6f9;
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #222;
-}
-
-/* Buttons */
-.add-goal-btn {
-    display: block;
-    margin: 10px auto;
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.add-goal-btn:hover {
-    background-color: #45a049;
-}
-
-/* Goal List */
-.goal-list {
+/* Header */
+.goals-header {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    max-height: 400px;
-    /* Prevents taking too much space */
-    overflow-y: auto;
-    /* Allows scrolling if too many goals */
-    padding: 10px;
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
-/* Goal Card */
-.goal-card {
-    background: white;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-    overflow: hidden;
+.goals-header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1a202c;
 }
 
-.goal-card h3 {
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.goal-card p {
-    margin: 5px 0;
-    color: #666;
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 /* Buttons */
-.goal-card button {
-    margin: 5px;
-    padding: 8px 12px;
+.btn {
+    padding: 8px 16px;
     border: none;
+    border-radius: 6px;
+    font-size: 14px;
     cursor: pointer;
-    border-radius: 5px;
+    transition: background 0.2s ease;
 }
 
-.edit-btn {
-    background-color: #007bff;
+.btn-primary {
+    background: #3182ce;
     color: white;
 }
 
-.delete-btn {
-    background-color: #dc3545;
+.btn-primary:hover {
+    background: #2b6cb0;
+}
+
+.btn-secondary {
+    background: #718096;
     color: white;
 }
 
-.edit-btn:hover {
-    background-color: #0056b3;
+.btn-secondary:hover {
+    background: #5a687d;
 }
 
-.delete-btn:hover {
-    background-color: #c82333;
+.btn-success {
+    background: #38a169;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #2f855a;
+}
+
+.btn-info {
+    background: #4299e1;
+    color: white;
+}
+
+.btn-info:hover {
+    background: #3182ce;
+}
+
+.btn-danger {
+    background: #e53e3e;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c53030;
+}
+
+.btn:disabled {
+    background: #a0aec0;
+    cursor: not-allowed;
+}
+
+/* Error & Loading */
+.error-message {
+    background: #fed7d7;
+    color: #9b2c2c;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.loading {
+    text-align: center;
+    color: #718096;
+    padding: 20px;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 /* Goal Form */
 .goal-form {
-    background: #f9f9f9;
+    background: white;
     padding: 20px;
-    border-radius: 10px;
-    position: fixed;
-    /* Keeps it above the goals list */
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -20%);
-    z-index: 1000;
-    width: 80%;
+    border-radius: 12px;
+    width: 90%;
     max-width: 500px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    overflow-y: auto;
     max-height: 80vh;
-    /* Ensures full display */
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.goal-form h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 15px;
+    text-align: center;
 }
 
 .goal-form input,
 .goal-form textarea {
     width: 100%;
     padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    margin: 8px 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: #f7fafc;
+    outline: none;
+    transition: border-color 0.2s ease;
 }
 
-/* Form Buttons */
-.goal-form button {
-    margin-top: 10px;
+.goal-form input:focus,
+.goal-form textarea:focus {
+    border-color: #3182ce;
+}
+
+.goal-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+    color: #4a5568;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+/* Goals List */
+.goals-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
     padding: 10px;
-    border: none;
-    cursor: pointer;
 }
 
-.save-btn {
-    background-color: #28a745;
-    color: white;
+/* Goal Card */
+.goal-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.cancel-btn {
-    background-color: #6c757d;
-    color: white;
+.goal-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 10px;
 }
 
-.save-btn:hover {
-    background-color: #218838;
+.goal-card p {
+    font-size: 0.9rem;
+    color: #4a5568;
+    margin: 5px 0;
 }
 
-.cancel-btn:hover {
-    background-color: #5a6268;
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #38a169;
+    transition: width 0.3s ease;
+}
+
+.goal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* No Goals */
+.no-goals {
+    text-align: center;
+    color: #718096;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .goals-container {
+        padding: 10px;
+    }
+
+    .goals-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .goals-list {
+        grid-template-columns: 1fr;
+    }
 }

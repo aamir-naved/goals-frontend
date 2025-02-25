@@ -100,3 +100,23 @@ h2 {
     color: #1b5e20;
     /* Softer green */
 }
+
+.back-home {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.back-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #b02a37;
+}

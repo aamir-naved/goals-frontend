@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./PrayerTimes.css";
 
 function PrayerTimes() {
@@ -6,6 +7,7 @@ function PrayerTimes() {
     const [prayerTimes, setPrayerTimes] = useState({});
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
+    const navigate = useNavigate();
 
     const getLocation = () => {
         if (navigator.geolocation) {
@@ -68,6 +70,13 @@ function PrayerTimes() {
                     ))}
                 </div>
             )}
+
+            {/* Back to Home Button */}
+            <div className="back-home">
+                <button className="button back-button" onClick={() => navigate("/")}>
+                    🔙 Back to Home
+                </button>
+            </div>
         </div>
     );
 }

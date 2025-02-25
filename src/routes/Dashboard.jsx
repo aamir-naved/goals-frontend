@@ -240,6 +240,7 @@ const Dashboard = () => {
                 <div className="install-banner">
                     <p>Install this app for a better experience!</p>
                     <button onClick={handleInstallClick} className="install-btn">Install</button>
+                    <button onClick={() => setShowInstallAlert(false)} className="close-install">✖</button>
                 </div>
             )}
             <h1>Hello There! {user?.name} 🙋</h1>

@@ -1,5 +1,11 @@
+html,
+body {
+    height: auto;
+    overflow-y: auto;
+}
 .container {
     max-width: 800px;
+    min-height: 100vh;
     margin: auto;
     padding: 20px;
     font-family: Arial, sans-serif;

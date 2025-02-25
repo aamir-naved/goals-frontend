@@ -6,6 +6,7 @@ import Dashboard from "./routes/Dashboard";
 import Goals from "./routes/Goals";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PrayerTimes from "./routes/PrayerTimes";
+import Chatbot from "./routes/Chatbot.jsx";
 import "./axiosConfig.js";
 
 

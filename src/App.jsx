@@ -16,6 +16,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/prayer-times" element={<PrayerTimes />} />
+      <Route path="/chatbot" element={<Chatbot />} />
 
       {/* Protect Dashboard and Goals Routes */}
       <Route

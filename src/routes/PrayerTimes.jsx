@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Loader from "../components/Loader"; // Import the Loader component
 import "./PrayerTimes.css";
 
 function PrayerTimes() {
@@ -8,27 +7,24 @@ function PrayerTimes() {
     const [prayerTimes, setPrayerTimes] = useState({});
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const getLocation = () => {
-        setLoading(true);
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    setLatitude(position.coords.latitude);
-                    setLongitude(position.coords.longitude);
-                    setLocation(`📍 Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`);
-                    setLoading(false);
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    setLatitude(lat);
+                    setLongitude(lon);
+                    setLocation(`📍 Latitude: ${lat}, Longitude: ${lon}`);
                 },
                 () => {
                     alert("Location access denied! Please allow location access.");
-                    setLoading(false);
                 }
             );
         } else {
             alert("Geolocation is not supported by this browser.");
-            setLoading(false);
         }
     };
 
@@ -38,7 +34,6 @@ function PrayerTimes() {
             return;
         }
 
-        setLoading(true);
         try {
             const response = await fetch(
                 `https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=1`
@@ -47,8 +42,6 @@ function PrayerTimes() {
             setPrayerTimes(data.data.timings);
         } catch (error) {
             console.error("Error fetching prayer times:", error);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -57,19 +50,17 @@ function PrayerTimes() {
             <h2>Prayer Times | Fiqh - Hanafi</h2>
 
             <div className="button-group">
-                <button className="button fetch-location" onClick={getLocation} disabled={loading}>
+                <button className="button fetch-location" onClick={getLocation}>
                     📍 Fetch My Location
                 </button>
-                <button className="button fetch-prayer-times" onClick={fetchPrayerTimes} disabled={loading}>
+                <button className="button fetch-prayer-times" onClick={fetchPrayerTimes}>
                     🕌 Show Me Prayer Times
                 </button>
             </div>
 
             <p className="location-text">{location}</p>
 
-            {loading ? (
-                <Loader /> // Using the Loader component
-            ) : Object.keys(prayerTimes).length > 0 ? (
+            {Object.keys(prayerTimes).length > 0 && (
                 <div className="prayer-times-box">
                     <h3>Prayer Times</h3>
                     {Object.entries(prayerTimes).map(([prayer, time]) => (
@@ -78,7 +69,7 @@ function PrayerTimes() {
                         </p>
                     ))}
                 </div>
-            ) : null}
+            )}
 
             {/* Back to Home Button */}
             <div className="back-home">

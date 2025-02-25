@@ -1,43 +1,87 @@
 import { useState } from "react";
+import axios from "axios";
 import "./Chatbot.css";
 
 function Chatbot() {
     const [message, setMessage] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
-    // const API_BASE_URL = "http://192.168.110.229:8000"; // Your local FastAPI backend
-    const API_BASE_URL = "https://ae20-2401-4900-5aa9-68cc-1505-481a-1d16-a33d.ngrok-free.app"; // NEW ngrok URL
+    const [userGoals, setUserGoals] = useState([]);
+    const [newGoals, setNewGoals] = useState("");
 
+    const API_BASE_URL = "https://ae20-2401-4900-5aa9-68cc-1505-481a-1d16-a33d.ngrok-free.app"; // ngrok URL
+
+    // 🔹 Send a message to the chatbot
     const sendMessage = async () => {
-        if (!message.trim()) return; // Prevent sending empty messages
+        if (!message.trim()) return;
+        console.log( "Send message....")
 
         const userMessage = { sender: "You", text: message };
-        setChatHistory([...chatHistory, userMessage]); // Update chat with user message
+        setChatHistory([...chatHistory, userMessage]);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/chat/`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    user_id: "user123",  // Dummy user ID
-                    message: message,    // User's message
-                }),
+            const response = await axios.post(`${API_BASE_URL}/chat/`, {
+                user_id: "user123",
+                message: message,
             });
 
-            const data = await response.json();
-            const botMessage = { sender: "AI Bot", text: data.response };
-
-            setChatHistory((prevChat) => [...prevChat, botMessage]); // Update chat with AI response
-            setMessage(""); // Clear input field
+            const botMessage = { sender: "AI Bot", text: response.data.summary };
+            console.log(response)
+            setChatHistory((prevChat) => [...prevChat, botMessage]);
+            setMessage("");
         } catch (error) {
-            console.error("Error:", error);
-            const errorMessage = { sender: "AI Bot", text: "Error connecting to backend." };
-            setChatHistory((prevChat) => [...prevChat, errorMessage]);
+            console.error("Chat Error:", error);
+            setChatHistory((prevChat) => [...prevChat, { sender: "AI Bot", text: "Error connecting to backend." }]);
+        }
+    };
+
+    // 🔹 Set user goals
+    const setGoals = async () => {
+        if (!newGoals.trim()) return;
+
+        const goalList = newGoals.split(",").map(goal => goal.trim());
+
+        try {
+            await axios.post(`${API_BASE_URL}/set_goals/`, {
+                user_id: "user123",
+                goals: goalList,
+            });
+            console.log()
+
+
+            setUserGoals(goalList);
+            setNewGoals(""); // Clear input field
+        } catch (error) {
+            console.error("Set Goals Error:", error);
+        }
+    };
+
+    // 🔹 Get user goals
+    const getGoals = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/get_goals/user123`);
+            setUserGoals(response.data.goals);
+            console.log()
+
+        } catch (error) {
+            console.error("Get Goals Error:", error);
+        }
+    };
+
+    // 🔹 Delete user goals
+    const deleteGoals = async () => {
+        try {
+            await axios.delete(`${API_BASE_URL}/delete_goals/user123`);
+            setUserGoals([]); // Clear the state
+        } catch (error) {
+            console.error("Delete Goals Error:", error);
         }
     };
 
     return (
         <div className="chatbot-container">
             <h1>Chat with AI Bot</h1>
+
+            {/* Chat Window */}
             <div className="chat-window">
                 {chatHistory.map((chat, index) => (
                     <div key={index} className={`chat-message ${chat.sender === "You" ? "user" : "bot"}`}>
@@ -46,6 +90,7 @@ function Chatbot() {
                 ))}
             </div>
 
+            {/* Chat Input */}
             <div className="input-container">
                 <input
                     type="text"
@@ -54,6 +99,33 @@ function Chatbot() {
                     onChange={(e) => setMessage(e.target.value)}
                 />
                 <button onClick={sendMessage}>Send</button>
+            </div>
+
+            {/* Goal Management */}
+            <div className="goal-section">
+                <h2>Manage Goals</h2>
+
+                <input
+                    type="text"
+                    placeholder="Enter goals (comma-separated)"
+                    value={newGoals}
+                    onChange={(e) => setNewGoals(e.target.value)}
+                />
+                <button onClick={setGoals}>Set Goals</button>
+
+                <button onClick={getGoals}>Get Goals</button>
+                <button onClick={deleteGoals}>Delete Goals</button>
+
+                {userGoals.length > 0 && (
+                    <div className="goal-list">
+                        <h3>Your Goals:</h3>
+                        <ul>
+                            {userGoals.map((goal, index) => (
+                                <li key={index}>{goal}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer Times WebApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #prayer-times {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            display: inline-block;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Simple Prayer Time Web App</h2>
+    <button onclick="getLocation()">📍 Fetch My Location</button>
+    <button onclick="fetchPrayerTimes()">🕌 Show Me Prayer Time</button>
+
+    <p id="location"></p>
+    <div id="prayer-times"></div>
+
+    <script>
+        let latitude = null;
+        let longitude = null;
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+                        document.getElementById("location").innerHTML =
+                            `📍 Latitude: ${latitude}, Longitude: ${longitude}`;
+                    },
+                    (error) => {
+                        alert("Location access denied! Please allow location access.");
+                    }
+                );
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function fetchPrayerTimes() {
+            if (latitude === null || longitude === null) {
+                alert("Please fetch your location first!");
+                return;
+            }
+
+            let apiURL = `https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=1`;
+
+            fetch(apiURL)
+                .then(response => response.json())
+                .then(data => {
+                    let timings = data.data.timings;
+                    let output = `<h3>Prayer Times</h3>`;
+                    for (let prayer in timings) {
+                        output += `<p><strong>${prayer}:</strong> ${timings[prayer]}</p>`;
+                    }
+                    document.getElementById("prayer-times").innerHTML = output;
+                })
+                .catch(error => console.error("Error fetching prayer times:", error));
+        }
+    </script>
+
+</body>
+
+</html>

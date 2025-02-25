@@ -10,7 +10,7 @@ function Home() {
             <div className="button-container">
                 <button onClick={() => navigate("/register")}>Register</button>
                 <button onClick={() => navigate("/login")}>Login</button>
-                <button onClick={() => navigate("/prayer-times")}>Prayer Times</button>
+                <button className="prayer" onClick={() => navigate("/prayer-times")}>Prayer Times</button>
             </div>
         </div>
     );

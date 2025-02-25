@@ -243,7 +243,7 @@ const Dashboard = () => {
                     <button onClick={() => setShowInstallAlert(false)} className="close-install">✖</button>
                 </div>
             )}
-            <h1>Hello There! {user?.name} 🙋</h1>
+            <h1 className="heading-dash">Hello There! {user?.name} 🙋</h1>
 
             <div className="button-group">
                 <Link to="/goals">

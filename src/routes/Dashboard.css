@@ -59,10 +59,20 @@ h1 {
 h2 {
     font-size: 24px;
 }
+.heading-dash {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-light);
+    /* Match page background */
+    z-index: 1000;
+    /* Ensure it stays above other elements */
+    padding: 15px 20px;
+    text-align: center;
+}
 
 /* Install Banner */
 .install-banner {
-    position: fixed;
+    position: relative;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
@@ -77,7 +87,7 @@ h2 {
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
-    z-index: 1000;
+    z-index: 900;
     animation: slideIn 0.3s ease-in-out;
 }
 

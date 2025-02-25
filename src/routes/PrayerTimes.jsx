@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader"; // Import the Loader component
 import "./PrayerTimes.css";
 
 function PrayerTimes() {
@@ -15,11 +16,9 @@ function PrayerTimes() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    setLatitude(lat);
-                    setLongitude(lon);
-                    setLocation(`📍 Latitude: ${lat}, Longitude: ${lon}`);
+                    setLatitude(position.coords.latitude);
+                    setLongitude(position.coords.longitude);
+                    setLocation(`📍 Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`);
                     setLoading(false);
                 },
                 () => {
@@ -59,16 +58,18 @@ function PrayerTimes() {
 
             <div className="button-group">
                 <button className="button fetch-location" onClick={getLocation} disabled={loading}>
-                    {loading ? <span className="loader"></span> : "📍 Fetch My Location"}
+                    📍 Fetch My Location
                 </button>
                 <button className="button fetch-prayer-times" onClick={fetchPrayerTimes} disabled={loading}>
-                    {loading ? <span className="loader"></span> : "🕌 Show Me Prayer Times"}
+                    🕌 Show Me Prayer Times
                 </button>
             </div>
 
             <p className="location-text">{location}</p>
 
-            {Object.keys(prayerTimes).length > 0 && (
+            {loading ? (
+                <Loader /> // Using the Loader component
+            ) : Object.keys(prayerTimes).length > 0 ? (
                 <div className="prayer-times-box">
                     <h3>Prayer Times</h3>
                     {Object.entries(prayerTimes).map(([prayer, time]) => (
@@ -77,7 +78,7 @@ function PrayerTimes() {
                         </p>
                     ))}
                 </div>
-            )}
+            ) : null}
 
             {/* Back to Home Button */}
             <div className="back-home">

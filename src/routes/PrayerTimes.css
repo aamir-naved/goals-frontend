@@ -120,27 +120,3 @@ h2 {
 .back-button:hover {
     background-color: #b02a37;
 }
-
-/* Loader animation */
-.loader {
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 0.6s linear infinite;
-}
-
-/* Spinner animation */
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* Disabled button styling */
-.button:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-}

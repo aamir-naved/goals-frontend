@@ -26,9 +26,9 @@
 
 /* Close Button */
 .close-button {
-    position: absolute;
-    right: 10px;
-    top: 5px;
+    position: relative;
+    right: auto;
+    top: auto;
     background: none;
     border: none;
     color: red;
@@ -38,6 +38,7 @@
 }
 
 .close-button:hover {
+    background: #c93a3a;
     color: #edebeb;
 }
 

@@ -1,0 +1,77 @@
+.prayer-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #222;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.fetch-location {
+    background-color: #007bff;
+    color: white;
+}
+
+.fetch-location:hover {
+    background-color: #0056b3;
+}
+
+.fetch-prayer-times {
+    background-color: #28a745;
+    color: white;
+}
+
+.fetch-prayer-times:hover {
+    background-color: #218838;
+}
+
+.location-text {
+    font-size: 16px;
+    color: #555;
+    margin-top: 10px;
+}
+
+.prayer-times-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.prayer-times-box h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.prayer-times-box p {
+    font-size: 16px;
+    margin: 5px 0;
+}

@@ -5,6 +5,7 @@ import Register from "./routes/Register";
 import Dashboard from "./routes/Dashboard";
 import Goals from "./routes/Goals";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PrayerTimes from "./routes/PrayerTimes";
 import "./axiosConfig.js";
 
 
@@ -14,6 +15,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/prayer-times" element={<PrayerTimes />} />
 
       {/* Protect Dashboard and Goals Routes */}
       <Route

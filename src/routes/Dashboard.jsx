@@ -5,6 +5,7 @@ import axios from "axios";
 const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
 import "./Dashboard.css"
 import ChatModal from './ChatModal';
+import PartnerGoalsModal from "./PartnerGoalsModal";
 
 
 const Dashboard = () => {
@@ -284,29 +285,18 @@ const Dashboard = () => {
             {selectedPartner && (
                 <ChatModal partner={selectedPartner} onClose={() => setSelectedPartner(null)} />
             )}
-
+{/* modal component here */}
 
             {isModalOpen && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h2>Partner's Goals</h2>
-                        <button className="close-modal" onClick={() => setIsModalOpen(false)}>Close</button>
-                        <div className="goal-list">
-                            {loading ? (
-                                <Loader />
-                            ) : partnerGoals.length > 0 ? (
-                                <ul>
-                                    {partnerGoals.map((goal) => (
-                                        <li key={goal.id}>{goal.title} - {goal.description}</li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>No goals found.</p>
-                            )}
-                        </div>
-                    </div>
-                </div>
+                <PartnerGoalsModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    partnerGoals={partnerGoals}
+                    loading={loading}
+                />
             )}
+
+
             {loading ? <Loader /> : pendingRequests.length > 0 && (
                 <div className="pending-requests">
                     <h2>Pending Requests</h2>

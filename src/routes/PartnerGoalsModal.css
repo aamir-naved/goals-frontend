@@ -1,0 +1,86 @@
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+/* Modal Content */
+.modal-content {
+    background: white;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Heading */
+.modal-content h2 {
+    margin-bottom: 15px;
+    font-size: 22px;
+}
+
+/* Close Button */
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+.close-modal:hover {
+    background: #cc0000;
+}
+
+/* Goal List */
+.goal-list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* Goal List Items */
+.goal-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.goal-list li {
+    background: #f8f9fa;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: left;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

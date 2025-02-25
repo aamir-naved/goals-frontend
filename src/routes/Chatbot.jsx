@@ -8,7 +8,7 @@ function Chatbot() {
     const [userGoals, setUserGoals] = useState([]);
     const [newGoals, setNewGoals] = useState("");
 
-    const API_BASE_URL = "https://ae20-2401-4900-5aa9-68cc-1505-481a-1d16-a33d.ngrok-free.app"; // ngrok URL
+    const API_BASE_URL = "https://5209-103-208-104-167.ngrok-free.app"; // ngrok URL
 
     // 🔹 Send a message to the chatbot
     const sendMessage = async () => {

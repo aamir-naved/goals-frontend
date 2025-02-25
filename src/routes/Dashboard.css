@@ -13,14 +13,29 @@
     --border-color: #ddd;
 }
 
-/* General Layout */
+/* Ensure the whole page is scrollable */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--background-light);
+}
+
+/* Container */
 .container {
     max-width: 800px;
     min-height: 100vh;
     margin: auto;
     padding: 20px;
-    font-family: 'Poppins', sans-serif;
-    background: var(--background-light);
+    box-sizing: border-box;
+    overflow-y: auto;
+    /* Allow page scrolling */
 }
 
 /* Typography */
@@ -71,19 +86,12 @@ h2 {
     background: var(--danger-hover);
 }
 
-.btn-success {
-    background: var(--success-color);
-}
-
-.btn-success:hover {
-    background: var(--success-hover);
-}
-
 /* Button Group */
 .button-group {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 /* Partner Section */
@@ -93,6 +101,30 @@ h2 {
     border-radius: 8px;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+}
+
+/* Restore scrolling for "Current Accountability Partners" */
+.partners-container {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    border-radius: 8px;
+    background: #f5f7fa;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+/* Partner Cards */
+.partner-card {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.08);
+    border-left: 5px solid var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 /* Requests & Users List */
@@ -105,6 +137,13 @@ h2 {
     margin-bottom: 20px;
 }
 
+/* Ensure users list is scrollable */
+.users-container {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+/* Prevent overflowing of list items */
 .request-item,
 .user-item {
     display: flex;
@@ -112,13 +151,7 @@ h2 {
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid var(--border-color);
-}
-
-.user-item {
-    background: var(--background-light);
-    border-radius: 5px;
-    padding: 12px;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.08);
+    word-wrap: break-word;
 }
 
 /* Modal Styling */
@@ -140,7 +173,8 @@ h2 {
     background: white;
     padding: 20px;
     border-radius: 10px;
-    width: 400px;
+    width: 90%;
+    max-width: 400px;
     max-height: 60vh;
     overflow-y: auto;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -166,9 +200,8 @@ h2 {
     background: var(--danger-hover);
 }
 
-/* Scrollable Sections */
-.goal-list,
-.users-container {
+/* Scrollable Goals */
+.goal-list {
     max-height: 300px;
     overflow-y: auto;
     padding-right: 5px;
@@ -200,6 +233,7 @@ h2 {
     font-weight: bold;
 }
 
+/* Buttons inside Install Banner */
 .install-btn {
     background: var(--primary-color);
     color: white;

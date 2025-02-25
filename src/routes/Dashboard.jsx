@@ -75,7 +75,7 @@ const Dashboard = () => {
                 console.error("Unexpected response format:", response.data);
             }
         } catch (error) {
-            console.error("Error fetching users:", error);
+            console.error("Error fetchingg users:", error);
         } finally {
             setLoading(false);
         }

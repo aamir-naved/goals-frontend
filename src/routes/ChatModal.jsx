@@ -22,10 +22,17 @@ const ChatModal = ({ partner, onClose }) => {
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
+
             if (data.history) {
-                setMessages(data.history.map(msg => JSON.parse(msg)));
+                setMessages(data.history.map(msg => ({
+                    senderId: msg.sender, // Rename sender to senderId
+                    content: msg.message  // Rename message to content
+                })));
             } else {
-                setMessages(prevMessages => [...prevMessages, data]);
+                setMessages(prevMessages => [
+                    ...prevMessages,
+                    { senderId: data.sender, content: data.message }
+                ]);
             }
         };
 
@@ -57,12 +64,12 @@ const ChatModal = ({ partner, onClose }) => {
             <div className="chat-modal">
                 <button className="close-button" onClick={onClose}>X</button>
                 <h3>Chat with {partner.name}</h3>
-                <div className="chat-history" ref={chatHistoryRef}>
+                <div className="chat-history">
                     {messages.map((msg, index) => {
-                        const isSent = msg.sender === userIdNew;
+                        const isSent = msg.senderId === userIdNew; // Check if the message was sent by the current user
                         return (
                             <div key={index} className={`message ${isSent ? 'sent' : 'received'}`}>
-                                {msg.message}
+                                {msg.content}
                             </div>
                         );
                     })}

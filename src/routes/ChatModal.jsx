@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import './ChatModal.css'; // Ensure styling for the modal
 
-const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+const WEBSOCKET_URL = "wss://goals-chat-func-production.up.railway.app/ws";
 
 const ChatModal = ({ partner, onClose }) => {
     const [messages, setMessages] = useState([]);
@@ -10,63 +9,47 @@ const ChatModal = ({ partner, onClose }) => {
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const userIdNew = user?.id;
-
-    // Create a reference to the chat history container
     const chatHistoryRef = useRef(null);
+    const socketRef = useRef(null);
 
     useEffect(() => {
-        fetchMessages();
-    }, [partner.id, messages.length]);  // Re-fetch messages when partner changes or new message is added
+        if (!userIdNew || !partner.id) return;
 
-    const fetchMessages = async () => {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+        const ws = new WebSocket(`${WEBSOCKET_URL}/${userIdNew}/${partner.id}`);
+        socketRef.current = ws;
 
-        try {
-            const response = await axios.get(`${API_BASE_URL}/api/messages/${userIdNew}/${partner.id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            console.log("📥 Fetched messages:", response.data);
-            setMessages(response.data);
-        } catch (error) {
-            console.error("❌ Error fetching messages:", error);
-        }
-    };
+        ws.onopen = () => console.log("✅ WebSocket Connected");
 
-    const sendMessage = async () => {
-        if (!newMessage.trim()) return;
-        const token = localStorage.getItem("token");
-
-        const messageData = {
-            senderId: userIdNew,
-            receiverId: partner.id,
-            content: newMessage
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.history) {
+                setMessages(data.history.map(msg => JSON.parse(msg)));
+            } else {
+                setMessages(prevMessages => [...prevMessages, data]);
+            }
         };
 
-        try {
-            await axios.post(`${API_BASE_URL}/api/messages`, messageData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            setNewMessage('');
-            fetchMessages(); // Fetch messages again after sending
-        } catch (error) {
-            console.error("❌ Error sending message:", error);
-        }
+        ws.onclose = () => console.log("❌ WebSocket Disconnected");
+
+        return () => ws.close();
+    }, [partner.id]);
+
+    const sendMessage = () => {
+        if (!newMessage.trim() || !socketRef.current) return;
+
+        const messageData = {
+            sender: userIdNew,
+            message: newMessage,
+        };
+
+        socketRef.current.send(JSON.stringify(messageData));
+        setNewMessage('');
     };
 
-    // Function to scroll to the bottom of the chat
-    const scrollToBottom = () => {
+    useEffect(() => {
         if (chatHistoryRef.current) {
             chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
         }
-    };
-
-    // Scroll to the bottom when messages change
-    useEffect(() => {
-        scrollToBottom();
     }, [messages]);
 
     return (
@@ -74,14 +57,12 @@ const ChatModal = ({ partner, onClose }) => {
             <div className="chat-modal">
                 <button className="close-button" onClick={onClose}>X</button>
                 <h3>Chat with {partner.name}</h3>
-                <div className="chat-history">
+                <div className="chat-history" ref={chatHistoryRef}>
                     {messages.map((msg, index) => {
-                        const isSent = msg.senderId === userIdNew;
+                        const isSent = msg.sender === userIdNew;
                         return (
                             <div key={index} className={`message ${isSent ? 'sent' : 'received'}`}>
-                                {msg.content}
-                                {/* Debugging Info */}
-                                <span className="debug-info">({msg.senderId} → {msg.receiverId})</span>
+                                {msg.message}
                             </div>
                         );
                     })}

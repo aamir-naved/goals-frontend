@@ -56,8 +56,17 @@ const ChatModal = ({ partner, onClose }) => {
     useEffect(() => {
         if (chatHistoryRef.current) {
             chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+            console.log("Inside if Messages being displayed:", messages);
         }
+        console.log("outside if Messages being displayed:", messages);
+        scrollToBottom();
     }, [messages]);
+
+    const scrollToBottom = () => {
+        if (chatHistoryRef.current) {
+            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+        }
+    };
 
     return (
         <div className="chat-modal-overlay">
@@ -66,10 +75,14 @@ const ChatModal = ({ partner, onClose }) => {
                 <h3>Chat with {partner.name}</h3>
                 <div className="chat-history">
                     {messages.map((msg, index) => {
-                        const isSent = msg.senderId === userIdNew; // Check if the message was sent by the current user
+                        const isSent = msg.sender === userIdNew; 
+                        // Ensure correct sender comparison
+                        console.log("Inside message map::")
+                        console.log("msgsender : " ,msg.sender)
+                        console.log("userid : ", userIdNew)
                         return (
                             <div key={index} className={`message ${isSent ? 'sent' : 'received'}`}>
-                                {msg.content}
+                                {msg.message} {/* Use msg.message instead of treating msg as a whole object */}
                             </div>
                         );
                     })}

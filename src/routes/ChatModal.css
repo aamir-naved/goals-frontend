@@ -55,38 +55,29 @@
     /* Enables smooth scrolling */
 }
 
-/* Individual Message */
 .message {
-    max-width: 60%;
-    padding: 10px 14px;
-    border-radius: 12px;
-    text-align: left;
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px;
     word-wrap: break-word;
-    display: flex;
-    flex-direction: column;
-    position: relative;
 }
 
-/* Sent Messages */
 .sent {
+    background-color: #dcf8c6;
+    /* Light green for sent messages */
     align-self: flex-end;
-    background-color: #007AFF;
-    /* Blue */
-    color: white;
     text-align: right;
-    border-top-right-radius: 2px;
+    margin-left: auto;
 }
 
-/* Received Messages */
 .received {
+    background-color: #f1f0f0;
+    /* Light gray for received messages */
     align-self: flex-start;
-    background-color: #E5E5EA;
-    /* Gray */
-    color: black;
     text-align: left;
-    border-top-left-radius: 2px;
+    margin-right: auto;
 }
-
 /* Debugging Info (Temporary) */
 .debug-info {
     font-size: 10px;

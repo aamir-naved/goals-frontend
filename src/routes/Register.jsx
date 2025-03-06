@@ -13,6 +13,13 @@ const Register = () => {
     const [loading, setLoading] = useState(false); 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/dashboard"); // Redirect if already logged in
+        }
+    }, []);
+
     const handleRegister = async (e) => {
         e.preventDefault();
         setError(null);

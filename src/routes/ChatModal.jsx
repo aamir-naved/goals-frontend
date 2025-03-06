@@ -119,12 +119,19 @@ const ChatModal = ({ partner, onClose }) => {
                             const parsedContent = typeof msg.content === 'string' ? JSON.parse(msg.content) : msg.content;
                             const finalMessage = parsedContent.message;
                             console.log("Parsed message finalMessage: ", finalMessage)
+                            return (
+                                <div key={index} className={`message received`}>
+                                    {finalMessage} {/* Correct field name */}
+                                </div>
+                            );
+                        }else{
+                            return (
+                                <div key={index} className={`message sent`}>
+                                    {msg.content} {/* Correct field name */}
+                                </div>
+                            );
                         }
-                        return (
-                            <div key={index} className={`message ${isSent ? 'sent' : 'received'}`}>
-                                {msg.content} {/* Correct field name */}
-                            </div>
-                        );
+                        
                     })}
                 </div>
                 <div className="chat-input">

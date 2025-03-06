@@ -251,7 +251,6 @@ const Dashboard = () => {
                     <button className="view-goals">View Goals</button>
                 </Link>
                 <button onClick={handleLogout} className="logout">Logout</button>
-                <button onClick={() => navigate("/prayer-times")}>Prayer Times</button>
             </div>
 
             {loading ? <Loader /> : partners.length > 0 ? (

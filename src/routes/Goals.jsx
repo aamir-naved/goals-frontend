@@ -161,8 +161,6 @@ const Goals = () => {
                 Back to Dashboard
             </button>
 
-            <button onClick={() => navigate("/prayer-times")}>Prayer Times</button>
-
             <h2>Your Goals</h2>
 
             {/* Add New Goal Button */}

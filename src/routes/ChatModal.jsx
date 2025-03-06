@@ -114,6 +114,12 @@ const ChatModal = ({ partner, onClose }) => {
                     {messages.map((msg, index) => {
                         const isSent = msg.senderId === userIdNew; // Correct sender check
                         console.log(`💬 Rendering Message [${index}]:`, msg);
+                        if(!isSent){
+                            console.log("Message Recieve Content Debugging inside messages map")
+                            const parsedContent = typeof msg.content === 'string' ? JSON.parse(msg.content) : msg.content;
+                            const finalMessage = parsedContent.message;
+                            console.log("Parsed message finalMessage: ", finalMessage)
+                        }
                         return (
                             <div key={index} className={`message ${isSent ? 'sent' : 'received'}`}>
                                 {msg.content} {/* Correct field name */}

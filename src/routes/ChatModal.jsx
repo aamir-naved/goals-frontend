@@ -91,7 +91,8 @@ const ChatModal = ({ partner, onClose }) => {
             console.log("💾 Updating Messages State with Sent Message");
             return [
                 ...prevMessages,
-                { senderId: userIdNew, content: newMessage } // Ensure sent messages appear
+                // { senderId: userIdNew, content: newMessage } // Ensure sent messages appear
+                { senderId: userIdNew, content: { "sender": userIdNew, "message": newMessage }}
             ];
         });
 
@@ -117,11 +118,7 @@ const ChatModal = ({ partner, onClose }) => {
                         console.log("userId: ", userIdNew)
                         console.log("isSent: ",isSent)
                         // Correct sender check
-                        console.log(`💬 Rendering Message [${index}]:`, msg);
-                        console.log("Message Recieve Content Debugging inside messages map")
-                        const parsedContent = typeof msg.content === 'string' ? JSON.parse(msg.content) : msg.content;
-                        const finalMessage = parsedContent.message;
-                        console.log("Parsed message finalMessage: ", finalMessage)
+                    
                         if (!isSent) {
                             console.log("Message Recieve Content Debugging inside messages map")
                             const parsedContent = typeof msg.content === 'string' ? JSON.parse(msg.content) : msg.content;
@@ -133,6 +130,11 @@ const ChatModal = ({ partner, onClose }) => {
                                 </div>
                             );
                         } else {
+                            console.log("Message Recieve Content Debugging inside messages map for isSent true")
+                            const parsedContent = typeof msg.content === 'string' ? JSON.parse(msg.content) : msg.content;
+                            const finalMessage = parsedContent.message;
+                            console.log("Parsed message finalMessage: ", finalMessage)
+
                             return (
                                 <div key={index} className={`message sent`}>
                                     {finalMessage} {/* Correct field name */}

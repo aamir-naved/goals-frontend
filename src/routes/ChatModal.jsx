@@ -13,76 +13,105 @@ const ChatModal = ({ partner, onClose }) => {
     const socketRef = useRef(null);
 
     useEffect(() => {
-        if (!userIdNew || !partner.id) return;
+        if (!userIdNew || !partner.id) {
+            console.warn("🚨 Missing userId or partnerId. WebSocket not initialized.");
+            return;
+        }
 
+        console.log(`🔌 Connecting to WebSocket: ${WEBSOCKET_URL}/${userIdNew}/${partner.id}`);
         const ws = new WebSocket(`${WEBSOCKET_URL}/${userIdNew}/${partner.id}`);
         socketRef.current = ws;
 
         ws.onopen = () => console.log("✅ WebSocket Connected");
 
         ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
+            console.log("📩 WebSocket Message Received:", event.data);
 
-            if (data.history) {
-                setMessages(data.history.map(msg => ({
-                    senderId: msg.sender, // Rename sender to senderId
-                    content: msg.message  // Rename message to content
-                })));
-            } else {
-                setMessages(prevMessages => [
-                    ...prevMessages,
-                    { senderId: data.sender, content: data.message }
-                ]);
+            try {
+                const data = JSON.parse(event.data);
+
+                if (data.history) {
+                    console.log("📜 Received Chat History:", data.history);
+
+                    setMessages(data.history.map(msgStr => {
+                        const msg = JSON.parse(msgStr); // Proper parsing
+                        console.log("📜 Parsed History Message:", msg);
+                        return {
+                            senderId: msg.sender,
+                            content: msg.message
+                        };
+                    }));
+                } else {
+                    const msg = JSON.parse(event.data); // Parse new message before using
+                    console.log("📨 New Incoming Message:", msg);
+
+                    setMessages(prevMessages => [
+                        ...prevMessages,
+                        { senderId: msg.sender, content: msg.message }
+                    ]);
+                }
+            } catch (error) {
+                console.error("❌ Error Parsing WebSocket Message:", error);
             }
         };
 
         ws.onclose = () => console.log("❌ WebSocket Disconnected");
 
-        return () => ws.close();
+        return () => {
+            console.log("🔌 Closing WebSocket Connection");
+            ws.close();
+        };
     }, [partner.id]);
 
     const sendMessage = () => {
-        if (!newMessage.trim() || !socketRef.current) return;
+        if (!newMessage.trim()) {
+            console.warn("🚨 Cannot send an empty message.");
+            return;
+        }
+
+        if (!socketRef.current) {
+            console.warn("🚨 WebSocket is not connected.");
+            return;
+        }
 
         const messageData = {
             sender: userIdNew,
             message: newMessage,
         };
 
+        console.log("📤 Sending Message:", messageData);
         socketRef.current.send(JSON.stringify(messageData));
+
+        setMessages(prevMessages => {
+            console.log("💾 Updating Messages State with Sent Message");
+            return [
+                ...prevMessages,
+                { senderId: userIdNew, content: newMessage } // Ensure sent messages appear
+            ];
+        });
+
         setNewMessage('');
     };
 
     useEffect(() => {
         if (chatHistoryRef.current) {
             chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-            console.log("Inside if Messages being displayed:", messages);
         }
-        console.log("outside if Messages being displayed:", messages);
-        scrollToBottom();
-    }, [messages]);
-
-    const scrollToBottom = () => {
-        if (chatHistoryRef.current) {
-            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-        }
-    };
+        console.log("📝 Updated Messages State:", messages);
+    }, [messages]); // Scroll only when messages update
 
     return (
         <div className="chat-modal-overlay">
             <div className="chat-modal">
                 <button className="close-button" onClick={onClose}>X</button>
                 <h3>Chat with {partner.name}</h3>
-                <div className="chat-history">
+                <div className="chat-history" ref={chatHistoryRef}>
                     {messages.map((msg, index) => {
-                        const isSent = msg.sender === userIdNew; 
-                        // Ensure correct sender comparison
-                        console.log("Inside message map::")
-                        console.log("msgsender : " ,msg.sender)
-                        console.log("userid : ", userIdNew)
+                        const isSent = msg.senderId === userIdNew; // Correct sender check
+                        console.log(`💬 Rendering Message [${index}]:`, msg);
                         return (
                             <div key={index} className={`message ${isSent ? 'sent' : 'received'}`}>
-                                {msg.message} {/* Use msg.message instead of treating msg as a whole object */}
+                                {msg.content} {/* Correct field name */}
                             </div>
                         );
                     })}

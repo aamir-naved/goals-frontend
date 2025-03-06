@@ -35,16 +35,16 @@ const ChatModal = ({ partner, onClose }) => {
 
                     setMessages(data.history.map(msgStr => {
                         try {
-                            const msg = typeof msgStr === 'string' ? JSON.parse(msgStr) : msgStr; // Ensure proper parsing
+                            const msg = typeof msgStr === 'string' ? JSON.parse(msgStr) : msgStr;
                             return {
                                 senderId: msg.sender,
-                                content: msg.message
+                                content: typeof msg.message === 'string' ? msg.message : JSON.parse(msg.message).message
                             };
                         } catch (error) {
                             console.error("❌ Error Parsing Individual History Message:", msgStr, error);
                             return null;
                         }
-                    }).filter(msg => msg !== null)); // Remove any null messages from errors
+                    }).filter(msg => msg !== null));
                 } else {
                     let msg = typeof data === 'string' ? JSON.parse(data) : data; // Ensure correct parsing
                     console.log("📨 New Incoming Message:", msg);
@@ -112,25 +112,15 @@ const ChatModal = ({ partner, onClose }) => {
                 <h3>Chat with {partner.name}</h3>
                 <div className="chat-history" ref={chatHistoryRef}>
                     {messages.map((msg, index) => {
-                        const isSent = msg.senderId === userIdNew; // Correct sender check
-                        console.log(`💬 Rendering Message [${index}]:`, msg);
-                        if(!isSent){
-                            console.log("Message Recieve Content Debugging inside messages map")
-                            const parsedContent = typeof msg.content === 'string' ? JSON.parse(msg.content) : msg.content;
-                            const finalMessage = parsedContent.message;
-                            console.log("Parsed message finalMessage: ", finalMessage)
-                            return (
-                                <div key={index} className={`message received`}>
-                                    {finalMessage} {/* Correct field name */}
-                                </div>
-                            );
-                        }else{
-                            return (
-                                <div key={index} className={`message sent`}>
-                                    {msg.content} {/* Correct field name */}
-                                </div>
-                            );
-                        }
+                        const isSent = msg.senderId === userIdNew;
+                        const finalMessage = typeof msg.content === 'string' ? msg.content : JSON.parse(msg.content).message;
+
+                        return (
+                            <div key={index} className={`message ${isSent ? 'sent' : 'received'}`}>
+                                {finalMessage}
+                            </div>
+                        );
+
                         
                     })}
                 </div>

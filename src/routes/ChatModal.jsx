@@ -112,8 +112,7 @@ const ChatModal = ({ partner, onClose }) => {
                 <h3>Chat with {partner.name}</h3>
                 <div className="chat-history" ref={chatHistoryRef}>
                     {messages.map((msg, index) => {
-                        const isSent = msg.senderId === userIdNew; 
-                        console.log("msg: ",msg)
+                        const isSent = String(msg.senderId) === String(userIdNew);                        console.log("msg: ",msg)
                         console.log("msg.senderId: ", msg.senderId)
                         console.log("userId: ", userIdNew)
                         console.log("isSent: ",isSent)

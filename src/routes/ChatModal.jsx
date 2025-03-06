@@ -118,6 +118,10 @@ const ChatModal = ({ partner, onClose }) => {
                         console.log("isSent: ",isSent)
                         // Correct sender check
                         console.log(`💬 Rendering Message [${index}]:`, msg);
+                        console.log("Message Recieve Content Debugging inside messages map")
+                        const parsedContent = typeof msg.content === 'string' ? JSON.parse(msg.content) : msg.content;
+                        const finalMessage = parsedContent.message;
+                        console.log("Parsed message finalMessage: ", finalMessage)
                         if (!isSent) {
                             console.log("Message Recieve Content Debugging inside messages map")
                             const parsedContent = typeof msg.content === 'string' ? JSON.parse(msg.content) : msg.content;
@@ -131,7 +135,7 @@ const ChatModal = ({ partner, onClose }) => {
                         } else {
                             return (
                                 <div key={index} className={`message sent`}>
-                                    {msg.content} {/* Correct field name */}
+                                    {finalMessage} {/* Correct field name */}
                                 </div>
                             );
                         }

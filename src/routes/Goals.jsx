@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+// const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 import "./Goals.css"
 
 axios.defaults.withCredentials = true;

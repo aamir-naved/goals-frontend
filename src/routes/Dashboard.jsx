@@ -2,7 +2,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import axios from "axios";
-const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+// const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 import "./Dashboard.css"
 import ChatModal from './ChatModal';
 import PartnerGoalsModal from "./PartnerGoalsModal";
@@ -22,7 +24,6 @@ const Dashboard = () => {
     const [selectedPartner, setSelectedPartner] = useState(null);
     const storedUser = localStorage.getItem("user");
     const user = storedUser ? JSON.parse(storedUser) : null;
-    
     
 
     useEffect(() => {

@@ -3,7 +3,8 @@ import { loginUser } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import axios from "axios";
-const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+// const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 import "./Login.css"
 
 const Login = () => {
@@ -12,6 +13,7 @@ const Login = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         const token = localStorage.getItem("token");

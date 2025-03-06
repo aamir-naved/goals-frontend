@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import axios from "axios";
-const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+// const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 import "./Register.css";
 
 const Register = () => {
@@ -14,8 +16,10 @@ const Register = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log(API_BASE_URL)
         const token = localStorage.getItem("token");
         if (token) {
+            console.log("User is already logged in...Redirecting to Dashboard.")
             navigate("/dashboard"); // Redirect if already logged in
         }
     }, []);

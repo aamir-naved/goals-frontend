@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+// const API_BASE_URL = "https://goals-app-production-49b0.up.railway.app";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 export const loginUser = async (email, password) => {
     try {

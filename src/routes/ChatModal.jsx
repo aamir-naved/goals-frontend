@@ -34,15 +34,19 @@ const ChatModal = ({ partner, onClose }) => {
                     console.log("📜 Received Chat History:", data.history);
 
                     setMessages(data.history.map(msgStr => {
-                        const msg = JSON.parse(msgStr); // Proper parsing
-                        console.log("📜 Parsed History Message:", msg);
-                        return {
-                            senderId: msg.sender,
-                            content: msg.message
-                        };
-                    }));
+                        try {
+                            const msg = typeof msgStr === 'string' ? JSON.parse(msgStr) : msgStr; // Ensure proper parsing
+                            return {
+                                senderId: msg.sender,
+                                content: msg.message
+                            };
+                        } catch (error) {
+                            console.error("❌ Error Parsing Individual History Message:", msgStr, error);
+                            return null;
+                        }
+                    }).filter(msg => msg !== null)); // Remove any null messages from errors
                 } else {
-                    const msg = JSON.parse(event.data); // Parse new message before using
+                    let msg = typeof data === 'string' ? JSON.parse(data) : data; // Ensure correct parsing
                     console.log("📨 New Incoming Message:", msg);
 
                     setMessages(prevMessages => [
@@ -51,8 +55,9 @@ const ChatModal = ({ partner, onClose }) => {
                     ]);
                 }
             } catch (error) {
-                console.error("❌ Error Parsing WebSocket Message:", error);
+                console.error("❌ Error Parsing WebSocket Message:", event.data, error);
             }
+
         };
 
         ws.onclose = () => console.log("❌ WebSocket Disconnected");

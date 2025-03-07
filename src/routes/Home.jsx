@@ -13,7 +13,7 @@ function Home() {
                 <button onClick={() => navigate("/register")}>Register</button>
                 <button onClick={() => navigate("/login")}>Login</button>
                 <button className="prayer" onClick={() => navigate("/prayer-times")}>Prayer Times</button>
-                <button className="report-issue" onClick={() => navigate("/report-issue")}>Report an Issue</button>
+                <button className="report-issue-home" onClick={() => navigate("/report-issue")}>Report an Issue</button>
                 {/* <button onClick={() => navigate("/chatbot")}>Chat with AI Bot</button> */}
             </div>
         </div>

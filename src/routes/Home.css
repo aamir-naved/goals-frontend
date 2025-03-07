@@ -78,10 +78,10 @@ button:hover {
     transform: translateY(-2px);
 }
 
-.report-issue {
-    position: fixed;
+.report-issue-home {
+    /* position: fixed;
     bottom: 20px;
-    right: 20px;
+    right: 20px; */
     background-color: #ff4d4d;
     /* Red color */
     color: white;
@@ -98,13 +98,13 @@ button:hover {
     transition: background-color 0.3s ease;
 }
 
-.report-issue::before {
+.report-issue-home::before {
     content: "⚠️";
     /* Exclamation mark emoji */
     font-size: 18px;
 }
 
-.report-issue:hover {
+.report-issue-home:hover {
     background-color: #cc0000;
     /* Darker red on hover */
 }

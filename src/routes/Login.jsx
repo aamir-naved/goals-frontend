@@ -76,6 +76,8 @@ const Login = () => {
                 />
                 <button type="submit">Login</button>
                 <button onClick={() => navigate("/register")}>Register</button>
+                <button className="report-issue" onClick={() => navigate("/report-issue")}>Report an Issue</button>
+
             </form>
             )}
         </div>

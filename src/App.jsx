@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PrayerTimes from "./routes/PrayerTimes";
 import Chatbot from "./routes/Chatbot.jsx";
 import "./axiosConfig.js";
+import ReportIssue from "./routes/ReportIssue.jsx";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/prayer-times" element={<PrayerTimes />} />
       <Route path="/chatbot" element={<Chatbot />} />
+      <Route path="/report-issue" element={<ReportIssue />} /> 
 
       {/* Protect Dashboard and Goals Routes */}
       <Route

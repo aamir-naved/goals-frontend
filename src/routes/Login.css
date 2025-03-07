@@ -83,3 +83,34 @@ p {
     margin-bottom: 10px;
     text-align: center;
 }
+
+.report-issue {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ff4d4d;
+    /* Red color */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.report-issue::before {
+    content: "⚠️";
+    /* Exclamation mark emoji */
+    font-size: 18px;
+}
+
+.report-issue:hover {
+    background-color: #cc0000;
+    /* Darker red on hover */
+}

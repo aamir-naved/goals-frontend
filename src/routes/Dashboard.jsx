@@ -237,6 +237,7 @@ const Dashboard = () => {
 
     return (
         <div className="container">
+            <button className="report-issue" onClick={() => navigate("/report-issue")}>Report an Issue</button>
             {loading && <Loader />} {/* Show loader while fetching data */}
             {showInstallAlert && (
                 <div className="install-banner">

@@ -162,6 +162,8 @@ const Goals = () => {
             >
                 Back to Dashboard
             </button>
+            <button className="report-issue" onClick={() => navigate("/report-issue")}>Report an Issue</button>
+
 
             <h2>Your Goals</h2>
 

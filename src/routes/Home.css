@@ -79,9 +79,9 @@ button:hover {
 }
 
 .report-issue {
-    /* position: fixed;
+    position: fixed;
     bottom: 20px;
-    right: 20px; */
+    right: 20px;
     background-color: #ff4d4d;
     /* Red color */
     color: white;

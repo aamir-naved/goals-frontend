@@ -56,7 +56,7 @@ const Register = () => {
  
     return (
         <div className="register-container">
-            <h2>Register</h2>
+            <h2>Register Here !!</h2>
             {error && <p className="error-message">{error}</p>}
             {loading ? (
                 <Loader /> // Show Loader while registering
